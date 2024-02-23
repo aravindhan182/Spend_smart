@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.aravindh.spendsmart.ui.screens.mainscreen.MainScreen
 import com.aravindh.spendsmart.ui.theme.SpendSmartTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,12 +19,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             SpendSmartTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
+                MainScreen()
+             /*   Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Greeting("Android")
-                }
+                }*/
             }
         }
     }
