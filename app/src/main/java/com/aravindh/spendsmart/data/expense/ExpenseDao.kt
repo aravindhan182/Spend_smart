@@ -1,7 +1,9 @@
 package com.aravindh.spendsmart.data.expense
 
+import androidx.room.Dao
 import androidx.room.Insert
 
+@Dao
 interface ExpenseDao {
 
     @Insert

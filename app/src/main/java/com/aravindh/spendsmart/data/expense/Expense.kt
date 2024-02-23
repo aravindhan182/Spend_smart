@@ -2,13 +2,14 @@ package com.aravindh.spendsmart.data.expense
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.aravindh.spendsmart.data.budget.Category
 import java.time.LocalDateTime
 
 @Entity(tableName = "expense")
 data class Expense(
 
-    @ColumnInfo(name = "id")
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id")
     val id: Long,
 
     @ColumnInfo(name = "budgetId")
