@@ -14,15 +14,27 @@ sealed class BottomBarScreen(
     var title: String,
     var icon: ImageVector
 ) {
-    object Budget : BottomBarScreen(
-        route = "budget",
-        title = "Budget",
+    object Daily : BottomBarScreen(
+        route = "daily",
+        title = "Daily",
         icon =Icons.Default.AddCircle
     )
 
-    object Filter : BottomBarScreen(
-        route = "filter",
-        title = "Filter",
+    object Monthly : BottomBarScreen(
+        route = "monthly",
+        title = "Monthly",
+        icon = Icons.Default.Menu
+    )
+
+    object Calendar : BottomBarScreen(
+        route = "calendar",
+        title = "Calendar",
+        icon =Icons.Default.AddCircle
+    )
+
+    object Total : BottomBarScreen(
+        route = "total",
+        title = "Total",
         icon = Icons.Default.Menu
     )
 }

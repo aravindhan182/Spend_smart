@@ -35,13 +35,22 @@ class MainActivity : ComponentActivity() {
 
                 val bottomNavigationItems = listOf(
                     SmoothAnimationBottomBarScreens(
-                        BottomBarScreen.Budget.route,
-                        "Budget",
-                        R.drawable.baseline_attach_money_24
+                        BottomBarScreen.Daily.route,
+                        "Daily",
+                        R.drawable.baseline_update_24
                     ), SmoothAnimationBottomBarScreens(
-                        BottomBarScreen.Filter.route,
-                        "Filter",
-                        R.drawable.baseline_filter_list_24
+                        BottomBarScreen.Monthly.route,
+                        "Monthly",
+                        R.drawable.baseline_calendar_view_month_24
+                    ),
+                    SmoothAnimationBottomBarScreens(
+                        BottomBarScreen.Calendar.route,
+                        "Calendar",
+                        R.drawable.baseline_calendar_month_24
+                    ), SmoothAnimationBottomBarScreens(
+                        BottomBarScreen.Total.route,
+                        "Total",
+                        R.drawable.baseline_speaker_notes_24
                     )
                 )
                 val currentIndex = rememberSaveable {
