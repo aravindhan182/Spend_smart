@@ -1,7 +1,6 @@
 package com.aravindh.spendsmart
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
@@ -10,6 +9,7 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -21,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.PratikFagadiya.smoothanimationbottombar.model.SmoothAnimationBottomBarScreens
 import com.PratikFagadiya.smoothanimationbottombar.properties.BottomBarProperties
@@ -37,7 +39,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             SpendSmartTheme {
                 val navController = rememberNavController()
-
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
                 val bottomNavigationItems = listOf(
                     SmoothAnimationBottomBarScreens(
                         BottomBarScreen.Daily.route,
@@ -76,7 +79,7 @@ class MainActivity : ComponentActivity() {
                             fontSize = 16.sp
                         ),
                         onSelectItem = {
-                            Log.i("SELECTED_ITEM", "onCreate: Selected Item ${it.name}")
+                            currentDestination?.hierarchy?.any { it.route == it.route } == true
                         })
                 }, floatingActionButton = {
                     FloatingActionButton(
