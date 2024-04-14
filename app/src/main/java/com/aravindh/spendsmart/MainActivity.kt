@@ -81,8 +81,7 @@ class MainActivity : ComponentActivity() {
                 }, floatingActionButton = {
                     FloatingActionButton(
                         onClick = {
-                            // Handle FAB click
-                            Log.i("FAB_CLICK", "Fab button clicked")
+                            navController.navigate("fabRoute")
                         },
                         modifier = Modifier.padding(bottom = 80.dp),
                         backgroundColor = Color.Red // Change color as needed

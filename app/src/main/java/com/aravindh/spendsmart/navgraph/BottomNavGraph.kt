@@ -5,6 +5,7 @@ import androidx.compose.runtime.MutableIntState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.aravindh.spendsmart.ui.screens.addexpenseandincomescreen.AddExpenseAndIncomeScreen
 import com.aravindh.spendsmart.ui.screens.calendar.CalendarScreen
 import com.aravindh.spendsmart.ui.screens.daily.DailyScreen
 import com.aravindh.spendsmart.ui.screens.montlyscreen.MonthlyScreen
@@ -24,6 +25,12 @@ fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntSta
         }
         composable(route = BottomBarScreen.Total.route) {
             TotalScreen()
+        }
+        // Add a composable for the FAB button destination
+        composable(route = "fabRoute") {
+            // Content for FAB button destination
+            // You can replace PlaceholderScreen with your actual content
+            AddExpenseAndIncomeScreen(navController = navController)
         }
     }
 
