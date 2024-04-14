@@ -5,13 +5,18 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,10 +78,25 @@ class MainActivity : ComponentActivity() {
                         onSelectItem = {
                             Log.i("SELECTED_ITEM", "onCreate: Selected Item ${it.name}")
                         })
-                }) { innerPadding ->
-                    Modifier.padding(innerPadding)
-                    BottomNavGraph(navController, currentIndex)
-                }
+                }, floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = {
+                            // Handle FAB click
+                            Log.i("FAB_CLICK", "Fab button clicked")
+                        },
+                        modifier = Modifier.padding(bottom = 80.dp),
+                        backgroundColor = Color.Red // Change color as needed
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_add_24),
+                            contentDescription = "Add"
+                        )
+                    }
+                }, floatingActionButtonPosition = FabPosition.End,
+                    isFloatingActionButtonDocked = true, content = { innerPadding ->
+                        Modifier.padding(innerPadding)
+                        BottomNavGraph(navController, currentIndex)
+                    })
             }
 
         }
