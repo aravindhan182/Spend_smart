@@ -64,7 +64,15 @@ class MainActivity : ComponentActivity() {
                 val currentIndex = rememberSaveable {
                     mutableIntStateOf(0)
                 }
+                val screens = listOf(
+                    BottomBarScreen.Daily,
+                    BottomBarScreen.Monthly,
+                    BottomBarScreen.Calendar,
+                    BottomBarScreen.Total
+                )
+                val isBottomBarDestination = screens.any { it.route == currentDestination?.route }
                 Scaffold(bottomBar = {
+                       if (isBottomBarDestination){
                     SmoothAnimationBottomBar(navController,
                         bottomNavigationItems,
                         initialIndex = currentIndex,
@@ -81,24 +89,28 @@ class MainActivity : ComponentActivity() {
                         onSelectItem = {
                             currentDestination?.hierarchy?.any { it.route == it.route } == true
                         })
+                }
                 }, floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = {
-                            navController.navigate("fabRoute")
-                        },
-                        modifier = Modifier.padding(bottom = 80.dp),
-                        backgroundColor = Color.Red // Change color as needed
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_add_24),
-                            contentDescription = "Add"
-                        )
+                    if (isBottomBarDestination) {
+                        FloatingActionButton(
+                            onClick = {
+                                navController.navigate("fabRoute")
+                            },
+                            modifier = Modifier.padding(bottom = 80.dp),
+                            backgroundColor = Color.Red // Change color as needed
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_add_24),
+                                contentDescription = "Add"
+                            )
+                        }
                     }
                 }, floatingActionButtonPosition = FabPosition.End,
                     isFloatingActionButtonDocked = true, content = { innerPadding ->
                         Modifier.padding(innerPadding)
                         BottomNavGraph(navController, currentIndex)
-                    })
+                    }
+                )
             }
 
         }
