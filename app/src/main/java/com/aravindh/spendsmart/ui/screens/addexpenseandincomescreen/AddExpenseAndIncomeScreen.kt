@@ -46,6 +46,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -80,6 +81,7 @@ import java.util.Calendar
 import java.util.Locale
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseAndIncomeScreen(navController: NavController) {
     var selectedText by remember { mutableStateOf("INCOME") }
@@ -101,10 +103,10 @@ fun AddExpenseAndIncomeScreen(navController: NavController) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp),
+                        .padding(start=16.dp, end = 16.dp, bottom = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "INCOME OR EXPENSE", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+                    Text(text = selectedText, fontWeight = FontWeight.Bold, fontSize = 24.sp)
 
                     Spacer(modifier = Modifier.padding(8.dp))
                     selectedText = dropDownWithTextField()
@@ -112,21 +114,27 @@ fun AddExpenseAndIncomeScreen(navController: NavController) {
                     CategoryCardView(selectedText)
                     Spacer(modifier = Modifier.padding(8.dp))
                     PaymentMethodCardView()
-                    Spacer(modifier = Modifier.padding(8.dp))
+                    Spacer(modifier = Modifier.padding(4.dp))
                     OutlinedTextField(
                         value = "", onValueChange = {},
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(100.dp),
                         label = {
-                            androidx.compose.material.Text(
+                           Text(
                                 text = "Notes..."
                             )
                         },
+                        colors = TextFieldDefaults.colors(
+                            focusedLabelColor = MaterialTheme.colorScheme.outline,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.outline,
+                            focusedContainerColor = MaterialTheme.colorScheme.background ,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.background
+                        ),
                     )
-                    Spacer(modifier = Modifier.padding(16.dp))
+                    Spacer(modifier = Modifier.padding(8.dp))
                     DateTimePickerComponent(LocalContext.current)
-                    Spacer(modifier = Modifier.padding(16.dp))
+                    Spacer(modifier = Modifier.padding(8.dp))
                 }
             }
         }
@@ -208,13 +216,15 @@ fun CategoryCardView(selectedText: String) {
     val isIncome = selectedText == "INCOME"
     // Main Card
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        border = BorderStroke(1.dp, Color.Black),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
                 scope.launch { showBottomSheet = true }
-            }
+            },
+        colors = CardDefaults.cardColors(
+            containerColor =  MaterialTheme.colorScheme.background,
+        )
     ) {
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -341,9 +351,9 @@ fun PaymentMethodCardView() {
     var selectedCategoryIndex by remember { mutableStateOf(-1) }
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,
+            containerColor =  MaterialTheme.colorScheme.background,
         ),
-        border = BorderStroke(1.dp, Color.Black),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
@@ -351,7 +361,6 @@ fun PaymentMethodCardView() {
             }
     ) {
         Column {
-
             if (showBottomSheet) {
                 ModalBottomSheet(
                     onDismissRequest = {
@@ -617,37 +626,6 @@ fun MyExtendedFab() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CategoryBottomSheetDialog(showBottomSheet: MutableState<Boolean>) {
-    val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
-    var showBottomSheet by remember { mutableStateOf(showBottomSheet) }
-    Column {
-
-        if (showBottomSheet.value) {
-            ModalBottomSheet(
-                onDismissRequest = {
-                    showBottomSheet.value = false
-                },
-                sheetState = sheetState
-            ) {
-                // Sheet content
-                Button(onClick = {
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            showBottomSheet.value = false
-                        }
-                    }
-                }) {
-                    Text("Hide bottom sheet")
-                }
-            }
-        }
-    }
-}
-
-
 @Composable
 fun GridItem(
     item: String,
@@ -681,7 +659,8 @@ fun GridItem(
                 Text(
                     text = item,
                     style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = Color.Black
                 )
             }
         }
