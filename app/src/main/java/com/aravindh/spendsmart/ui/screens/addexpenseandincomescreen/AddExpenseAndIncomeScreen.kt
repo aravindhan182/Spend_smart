@@ -72,13 +72,15 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.aravindh.spendsmart.R
+import com.aravindh.spendsmart.ui.screens.model.Catergories
 import com.aravindh.spendsmart.ui.theme.dark_cyan
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun AddExpenseAndIncomeScreen(navController: NavController) {
+    var selectedText by remember { mutableStateOf("INCOME") }
     Scaffold(
         floatingActionButton = { MyExtendedFab() },
         content = { paddingValues ->
@@ -101,10 +103,11 @@ fun AddExpenseAndIncomeScreen(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(text = "INCOME OR EXPENSE", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+
                     Spacer(modifier = Modifier.padding(8.dp))
-                    DropDownWithTextField()
+                    selectedText = dropDownWithTextField()
                     Spacer(modifier = Modifier.padding(8.dp))
-                    CategoryCardView()
+                    CategoryCardView(selectedText)
                     Spacer(modifier = Modifier.padding(8.dp))
                     PaymentMethodCardView()
                     Spacer(modifier = Modifier.padding(8.dp))
@@ -130,7 +133,7 @@ fun AddExpenseAndIncomeScreen(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownWithTextField() {
+fun dropDownWithTextField(): String {
     val list = listOf("INCOME", "EXPENSE")
     var isExpanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(list[0]) }
@@ -189,17 +192,18 @@ fun DropDownWithTextField() {
             )
         }
     }
+    return selectedText
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryCardView() {
+fun CategoryCardView(selectedText: String) {
     var selectedCategory by remember { mutableStateOf("Allowance") }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedCategoryIndex by remember { mutableStateOf(-1) }
-
+    val isIncome = selectedText == "INCOME"
     // Main Card
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -243,14 +247,62 @@ fun CategoryCardView() {
             onDismissRequest = { showBottomSheet = false },
             sheetState = sheetState
         ) {
-            val categories = listOf("Allowance", "Salary", "Crypto", "Others")
-            val categoriesIcons = listOf(
+
+            val expenseCategories = listOf(
+                "Beauty",
+                "Vehicle",
+                "Clothing",
+                "Education",
+                "Home",
+                "Food",
+                "Transport",
+                "Shopping",
+                "Entertainment",
+                "Insurance",
+                "Recharge"
+            )
+            val incomeCategories = listOf(
+                "Allowance",
+                "Salary",
+                "Crypto",
+                "Others",
+                "Awards",
+                "Coupons",
+                "Sale",
+                "Rental",
+                "Gifts"
+            )
+
+            val expenseCategoriesIcons = listOf(
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_makeup_k7vs8byt5a),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_electric_car_y8tgpu3rb7),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_clothes_lytbq7vgmj),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_education_apps_yawm95r4pl),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_home_78ypw4dhuc),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_unhealthy_food_g7mubj94z3),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_train_platform_jv564rcu89),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_woman_shopping_nl38vsbhzr),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_sports_kl9fswqdhc),
+                ImageVector.vectorResource(
+                    id = R.drawable.reshot_icon_insurance_slnfkqrbe3
+                ),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_rechargeable_battery_q3jzw68n24)
+            )
+            val incomeCategoriesIcons = listOf(
                 ImageVector.vectorResource(id = R.drawable.reshot_icon_money_transport_zx3wfh7j68),
                 ImageVector.vectorResource(id = R.drawable.reshot_icon_send_money_h9mlb4d7ez),
                 ImageVector.vectorResource(id = R.drawable.reshot_icon_money_making_zyl8m5jrqs),
-                ImageVector.vectorResource(id = R.drawable.reshot_icon_team_money_8nhdr7vzfb)
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_team_money_8nhdr7vzfb),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_money_bag_ugdnplyzv7),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_voucher_4vpc8kwb9g),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_sale_cw9v2ujp7f),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_house_loan_pny3fgzjt4),
+                ImageVector.vectorResource(id = R.drawable.reshot_icon_special_gift_ueh2ny567x)
             )
-
+            val categories = if (!isIncome) (Catergories(
+                expenseCategories,
+                expenseCategoriesIcons
+            )) else (Catergories(incomeCategories, incomeCategoriesIcons))
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2), // 2 columns
                 contentPadding = PaddingValues(16.dp),
@@ -258,18 +310,19 @@ fun CategoryCardView() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(categories.size) { index ->
+                items(categories.catergoryName.size) { index ->
                     GridItem(
-                        item = categories[index],
-                        imageVector = categoriesIcons[index],
+                        item = categories.catergoryName[index],
+                        imageVector = categories.categoryImage[index],
                         isSelected = selectedCategoryIndex == index,
                         onClick = {
                             selectedCategoryIndex = index
-                            selectedCategory = categories[index]
+                            selectedCategory = incomeCategories[index]
                             showBottomSheet = false
                         }
                     )
                 }
+
             }
         }
     }
