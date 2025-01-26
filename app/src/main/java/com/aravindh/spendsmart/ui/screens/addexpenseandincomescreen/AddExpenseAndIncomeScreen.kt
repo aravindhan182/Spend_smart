@@ -75,7 +75,9 @@ import com.aravindh.spendsmart.R
 import com.aravindh.spendsmart.ui.screens.model.Catergories
 import com.aravindh.spendsmart.ui.theme.dark_cyan
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 
 @Composable
@@ -471,15 +473,19 @@ fun DateTimePickerComponent(context: Context) {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        val selectedDate = Calendar.getInstance().apply {
-                            timeInMillis = datePickerState.selectedDateMillis ?: 0L
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val selectedDate = Calendar.getInstance().apply {
+                                timeInMillis = millis
+                            }
+                            val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                            selectedDates = dateFormat.format(selectedDate.time)
+
+                            Toast.makeText(
+                                context,
+                                "Selected date ${selectedDates} saved",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                        selectedDates = selectedDate.toString()
-                        Toast.makeText(
-                            context,
-                            "Selected date ${selectedDate.time} saved",
-                            Toast.LENGTH_SHORT
-                        ).show()
                         showDatePicker = false
                     }
                 ) { Text("OK") }
@@ -504,19 +510,24 @@ fun DateTimePickerComponent(context: Context) {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        val selectedDate = Calendar.getInstance().apply {
-                            this.time
+                        val selectedTime = Calendar.getInstance().apply {
+                            set(Calendar.HOUR_OF_DAY, timePickerState.hour)
+                            set(Calendar.MINUTE, timePickerState.minute)
                         }
-                        selectedTimes = selectedDate.time.toString()
+                        val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                        selectedTimes = timeFormat.format(selectedTime.time)
+
                         Toast.makeText(
                             context,
-                            "Selected time ${selectedDate.time} saved",
+                            "Selected time ${selectedTimes} saved",
                             Toast.LENGTH_SHORT
                         ).show()
+
                         showTimePicker = false
                     }
                 ) { Text("OK") }
-            },
+            }
+            ,
             dismissButton = {
                 TextButton(
                     onClick = {
