@@ -1,16 +1,19 @@
 package com.aravindh.spendsmart.navgraph
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.aravindh.spendsmart.ui.screens.addexpenseandincomescreen.AddExpenseAndIncomeScreen
-import com.aravindh.spendsmart.ui.screens.calendar.CalendarScreen
+import com.aravindh.spendsmart.ui.screens.calendar.CalendarView
 import com.aravindh.spendsmart.ui.screens.daily.DailyScreen
 import com.aravindh.spendsmart.ui.screens.montlyscreen.MonthlyScreen
 import com.aravindh.spendsmart.ui.screens.totalscreen.TotalScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntState) {
     NavHost(navController = navController, startDestination = BottomBarScreen.Daily.route) {
@@ -21,7 +24,7 @@ fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntSta
             MonthlyScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Calendar.route) {
-            CalendarScreen(navController = navController)
+            CalendarView(navController = navController)
         }
         composable(route = BottomBarScreen.Total.route) {
             TotalScreen()
