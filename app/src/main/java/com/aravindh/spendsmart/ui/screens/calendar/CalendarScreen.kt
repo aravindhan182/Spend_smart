@@ -1,115 +1,127 @@
 package com.aravindh.spendsmart.ui.screens.calendar
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import android.app.DatePickerDialog
+import android.content.Context
+import android.icu.util.Calendar
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import java.time.LocalDate
-import java.time.YearMonth
-import java.time.format.TextStyle
-import java.util.Locale
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
-fun CalendarView(navController: NavController) {
-    val currentMonth = remember { mutableStateOf(YearMonth.now()) }
-    val selectedDate = remember { mutableStateOf(LocalDate.now()) }
+fun DatePickerEnhancedExample(navController: NavController) {
+    var selectedDate by remember { mutableStateOf<String?>(null) }
+    var openCalendar by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    if (openCalendar) {
+        DatePicker(context = context, onDateSelected = { date ->
+            selectedDate = date
+            openCalendar = false
+        })
+    }
 
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        CalendarHeader(currentMonth.value) { newMonth ->
-            currentMonth.value = newMonth
-        }
-        CalendarGrid(currentMonth.value, selectedDate.value) { date ->
-            selectedDate.value = date
-        }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun CalendarHeader(currentMonth: YearMonth, onMonthChange: (YearMonth) -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "<",
-            fontSize = 24.sp,
-            modifier = Modifier.clickable { onMonthChange(currentMonth.minusMonths(1)) }
-        )
-        Text(
-            text = currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + currentMonth.year,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = ">",
-            fontSize = 24.sp,
-            modifier = Modifier.clickable { onMonthChange(currentMonth.plusMonths(1)) }
-        )
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun CalendarGrid(currentMonth: YearMonth, selectedDate: LocalDate, onDateSelected: (LocalDate) -> Unit) {
-    val daysInMonth = currentMonth.lengthOfMonth()
-    val firstDayOfMonth = currentMonth.atDay(1).dayOfWeek.value % 7
-    val days = (1..daysInMonth).map { currentMonth.atDay(it) }
-    val weeks = days.chunked(7 - firstDayOfMonth) // Start week correction
-
-    Column {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat").forEach {
-                Text(
-                    text = it,
-                    modifier = Modifier.weight(1f),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-            }
+        Button(
+            onClick = { openCalendar = true },
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
+        ) {
+            Text(
+                text = "Select Date",
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                color = Color.White
+            )
         }
 
-        weeks.forEach { week ->
-            Row(modifier = Modifier.fillMaxWidth()) {
-                week.forEach { date ->
-                    DayView(date, selectedDate == date) { onDateSelected(date) }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        AnimatedVisibility(
+            visible = selectedDate != null,
+            enter = fadeIn()
+        ) {
+            Card(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Selected Date: $selectedDate",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    )
                 }
             }
         }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayView(date: LocalDate, isSelected: Boolean, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .size(40.dp)
-            .background(if (isSelected) Color.Blue else Color.Transparent, shape = RoundedCornerShape(8.dp))
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = date.dayOfMonth.toString(),
-            fontSize = 16.sp,
-            color = if (isSelected) Color.White else Color.Black
-        )
+fun DatePicker(
+    context: Context,
+    onDateSelected: (String) -> Unit
+) {
+    val calendar = Calendar.getInstance()
+
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _, selectedYear, selectedMonth, selectedDayOfMonth ->
+            val formattedDate = "$selectedDayOfMonth/${selectedMonth + 1}/$selectedYear"
+            onDateSelected(formattedDate)
+        },
+        year,
+        month,
+        day
+    )
+
+    LaunchedEffect(Unit) {
+        datePickerDialog.show()
     }
 }
-

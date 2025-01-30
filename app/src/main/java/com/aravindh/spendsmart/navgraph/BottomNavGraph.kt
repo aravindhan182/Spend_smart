@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.aravindh.spendsmart.ui.screens.addexpenseandincomescreen.AddExpenseAndIncomeScreen
-import com.aravindh.spendsmart.ui.screens.calendar.CalendarView
+import com.aravindh.spendsmart.ui.screens.calendar.DatePickerEnhancedExample
 import com.aravindh.spendsmart.ui.screens.daily.DailyScreen
 import com.aravindh.spendsmart.ui.screens.montlyscreen.MonthlyScreen
 import com.aravindh.spendsmart.ui.screens.totalscreen.TotalScreen
@@ -24,15 +24,12 @@ fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntSta
             MonthlyScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Calendar.route) {
-            CalendarView(navController = navController)
+            DatePickerEnhancedExample(navController = navController)
         }
         composable(route = BottomBarScreen.Total.route) {
             TotalScreen()
         }
-        // Add a composable for the FAB button destination
         composable(route = "fabRoute") {
-            // Content for FAB button destination
-            // You can replace PlaceholderScreen with your actual content
             AddExpenseAndIncomeScreen(navController = navController)
         }
     }
