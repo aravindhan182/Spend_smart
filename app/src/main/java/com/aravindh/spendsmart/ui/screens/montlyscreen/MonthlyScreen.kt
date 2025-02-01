@@ -100,17 +100,13 @@ fun MonthlyScreen(navController: NavController) {
 
             }
         )
-        Spacer(modifier = Modifier.padding(4.dp))
-        Text(
-            text = "Monthly Record",
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h6
-        )
+        Spacer(modifier = Modifier.padding(8.dp))
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp), horizontalArrangement = Arrangement.SpaceEvenly
+                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp, end = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             var monthSelectionButtonLabel by remember {
                 mutableStateOf("Select a month")
@@ -118,17 +114,14 @@ fun MonthlyScreen(navController: NavController) {
             if (date.isNotEmpty()) {
                 monthSelectionButtonLabel = date
             }
+            Text(
+                text = "Monthly Record",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 8.dp),
+                style = MaterialTheme.typography.h6
+            )
             OutlinedButton(onClick = { visible = true }) {
                 Text(text = monthSelectionButtonLabel, color = Color.Black)
-            }
-            Spacer(modifier = Modifier.padding(4.dp))
-            Button(
-                onClick = { /*TODO*/ },
-                elevation = ButtonDefaults.elevation(4.dp),
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
-            ) {
-                Text(text = "Get", color = Color.White)
             }
         }
         val ls = listOf<ExpenseOrIncomeMutableView>(
