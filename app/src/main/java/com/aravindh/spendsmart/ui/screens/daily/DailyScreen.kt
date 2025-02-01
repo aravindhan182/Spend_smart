@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,10 +26,12 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
@@ -46,7 +49,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -58,6 +63,7 @@ import com.aravindh.spendsmart.ui.screens.model.ExpenseOrIncomeMutableView
 fun DailyScreen(navController: NavController) {
     Box(
         modifier = Modifier
+            .background(Color(0xFFF4EAF0))
             .fillMaxSize()
             .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
         contentAlignment = Alignment.TopCenter
@@ -219,7 +225,10 @@ fun ShutterView() {
         if (expanded) 0.dp else (-100).dp
     }
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
         IconButton(
             onClick = { isExpanded = !isExpanded },
             modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -234,11 +243,127 @@ fun ShutterView() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .background(Color.White)
                     .offset(y = offsetY),
                 contentAlignment = Alignment.Center
             ) {
-                //TODO Shutter content should be implemented
+                Card(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(4.dp),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Column {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            AssistChip(
+                                onClick = {},
+                                modifier = Modifier.weight(1f),
+                                label = {
+                                    Text(
+                                        "Income",
+                                        fontSize = 20.sp,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                },
+                                colors = AssistChipDefaults.assistChipColors(
+                                    containerColor = Color(
+                                        0xFF095b09
+                                    )
+                                ),
+                                trailingIcon = {
+                                    IconButton(onClick = {}) {
+                                        Icon(
+                                            imageVector = Icons.Default.CheckCircle,
+                                            contentDescription = "Close",
+                                            tint = Color.White
+                                        )
+                                    }
+                                }
+                            )
+                            AssistChip(
+                                onClick = {},
+                                modifier = Modifier.weight(1f),
+                                label = {
+                                    Text(
+                                        "Expense",
+                                        fontSize = 20.sp,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                },
+                                colors = AssistChipDefaults.assistChipColors(
+                                    containerColor = Color(
+                                        0xFFD12410
+                                    )
+                                ),
+                                trailingIcon = {
+                                    IconButton(onClick = {}) {
+                                        Icon(
+                                            imageVector = Icons.Default.Warning,
+                                            contentDescription = "Close",
+                                            tint = Color.White
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .wrapContentHeight(),
+                                contentAlignment = Alignment.TopCenter
+                            ) {
+                                Text(
+                                    text = "12,0000",
+                                    textAlign = TextAlign.Start,
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f) // Equal width
+                                    .wrapContentHeight(),
+                                contentAlignment = Alignment.TopCenter
+                            ) {
+                                Text(
+                                    text = "13,0000",
+                                    textAlign = TextAlign.Start,
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .padding(start = 8.dp, end = 8.dp)
+                                .fillMaxWidth()
+                                .wrapContentHeight(),
+                            contentAlignment = Alignment.TopCenter
+                        ) {
+                            Text(
+                                text = "Please be careful in your expense :)",
+                                textAlign = TextAlign.Center,
+                                fontStyle = FontStyle.Italic, color = Color.Black
+                            )
+                        }
+                    }
+                }
             }
         }
     }
