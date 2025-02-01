@@ -1,5 +1,8 @@
 package com.aravindh.spendsmart.ui.screens.daily
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,6 +25,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AssistChip
@@ -28,8 +34,13 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -108,7 +119,7 @@ fun DailyScreen(navController: NavController) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                    .padding(top = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -125,8 +136,8 @@ fun DailyScreen(navController: NavController) {
                     imageVector = Icons.Default.Search,
                     contentDescription = "Search"
                 )
-
             }
+            ShutterView()
             LazyColumn {
                 items(ls) { item ->
                     IncomeOrExpenseRecyclerViewCard(item = item)
@@ -158,7 +169,7 @@ fun IncomeOrExpenseRecyclerViewCard(item: ExpenseOrIncomeMutableView) {
                     .padding(8.dp)
             ) {
                 AssistChip(
-                    onClick = {  },
+                    onClick = { },
                     label = { Text(item.title, color = Color.Black) },
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = Color.LightGray
@@ -182,7 +193,8 @@ fun IncomeOrExpenseRecyclerViewCard(item: ExpenseOrIncomeMutableView) {
             Column(
                 modifier = Modifier
                     .weight(0.4f)
-                    .fillMaxHeight().background(color = Color(0xFFF5BDBD))
+                    .fillMaxHeight()
+                    .background(color = Color(0xFFF5BDBD))
                     .padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -198,5 +210,37 @@ fun IncomeOrExpenseRecyclerViewCard(item: ExpenseOrIncomeMutableView) {
 }
 
 
+@Composable
+fun ShutterView() {
+    var isExpanded by remember { mutableStateOf(false) }
+    val transition = updateTransition(targetState = isExpanded, label = "Shutter Animation")
 
+    val offsetY by transition.animateDp(label = "Offset Y") { expanded ->
+        if (expanded) 0.dp else (-100).dp
+    }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        IconButton(
+            onClick = { isExpanded = !isExpanded },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            androidx.compose.material.Icon(
+                imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                contentDescription = "Toggle Shutter"
+            )
+        }
+        AnimatedVisibility(visible = isExpanded) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .background(Color.White)
+                    .offset(y = offsetY),
+                contentAlignment = Alignment.Center
+            ) {
+                //TODO Shutter content should be implemented
+            }
+        }
+    }
+}
 
