@@ -1,8 +1,10 @@
 package com.aravindh.spendsmart
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FabPosition
 import androidx.compose.material.FloatingActionButton
@@ -34,6 +36,7 @@ import com.aravindh.spendsmart.ui.theme.dark_cyan
 import com.aravindh.spendsmart.ui.theme.light_cyan
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -56,8 +59,8 @@ class MainActivity : ComponentActivity() {
                         "Calendar",
                         R.drawable.baseline_calendar_month_24
                     ), SmoothAnimationBottomBarScreens(
-                        BottomBarScreen.Total.route,
-                        "Total",
+                        BottomBarScreen.Analytics.route,
+                        "Analytics",
                         R.drawable.baseline_speaker_notes_24
                     )
                 )
@@ -68,7 +71,7 @@ class MainActivity : ComponentActivity() {
                     BottomBarScreen.Daily,
                     BottomBarScreen.Monthly,
                     BottomBarScreen.Calendar,
-                    BottomBarScreen.Total
+                    BottomBarScreen.Analytics
                 )
                 val isBottomBarDestination = screens.any { it.route == currentDestination?.route }
                 Scaffold(bottomBar = {

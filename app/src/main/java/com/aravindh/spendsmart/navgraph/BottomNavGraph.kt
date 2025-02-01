@@ -11,7 +11,7 @@ import com.aravindh.spendsmart.ui.screens.addexpenseandincomescreen.AddExpenseAn
 import com.aravindh.spendsmart.ui.screens.calendar.DatePickerEnhancedExample
 import com.aravindh.spendsmart.ui.screens.daily.DailyScreen
 import com.aravindh.spendsmart.ui.screens.montlyscreen.MonthlyScreen
-import com.aravindh.spendsmart.ui.screens.totalscreen.TotalScreen
+import com.aravindh.spendsmart.ui.screens.analyticsscreen.AnalyticsScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -26,8 +26,8 @@ fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntSta
         composable(route = BottomBarScreen.Calendar.route) {
             DatePickerEnhancedExample(navController = navController)
         }
-        composable(route = BottomBarScreen.Total.route) {
-            TotalScreen()
+        composable(route = BottomBarScreen.Analytics.route) {
+            AnalyticsScreen()
         }
         composable(route = "fabRoute") {
             AddExpenseAndIncomeScreen(navController = navController)

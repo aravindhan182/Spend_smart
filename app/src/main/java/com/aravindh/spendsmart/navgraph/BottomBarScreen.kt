@@ -32,9 +32,9 @@ sealed class BottomBarScreen(
         icon =Icons.Default.AddCircle
     )
 
-    object Total : BottomBarScreen(
-        route = "total",
-        title = "Total",
+    object Analytics : BottomBarScreen(
+        route = "Analytics",
+        title = "Analytics",
         icon = Icons.Default.Menu
     )
 }
