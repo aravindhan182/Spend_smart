@@ -52,7 +52,6 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -74,7 +73,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.aravindh.spendsmart.R
 import com.aravindh.spendsmart.ui.screens.model.Catergories
-import com.aravindh.spendsmart.ui.theme.dark_cyan
+import com.aravindh.spendsmart.ui.theme.cyan800
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -103,7 +102,7 @@ fun AddExpenseAndIncomeScreen(navController: NavController) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(start=16.dp, end = 16.dp, bottom = 16.dp),
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(text = selectedText, fontWeight = FontWeight.Bold, fontSize = 24.sp)
@@ -121,14 +120,14 @@ fun AddExpenseAndIncomeScreen(navController: NavController) {
                             .fillMaxWidth()
                             .height(100.dp),
                         label = {
-                           Text(
+                            Text(
                                 text = "Notes..."
                             )
                         },
                         colors = TextFieldDefaults.colors(
                             focusedLabelColor = MaterialTheme.colorScheme.outline,
                             unfocusedLabelColor = MaterialTheme.colorScheme.outline,
-                            focusedContainerColor = MaterialTheme.colorScheme.background ,
+                            focusedContainerColor = MaterialTheme.colorScheme.background,
                             unfocusedContainerColor = MaterialTheme.colorScheme.background
                         ),
                     )
@@ -223,7 +222,7 @@ fun CategoryCardView(selectedText: String) {
                 scope.launch { showBottomSheet = true }
             },
         colors = CardDefaults.cardColors(
-            containerColor =  MaterialTheme.colorScheme.background,
+            containerColor = MaterialTheme.colorScheme.background,
         )
     ) {
         Column {
@@ -351,7 +350,7 @@ fun PaymentMethodCardView() {
     var selectedCategoryIndex by remember { mutableStateOf(-1) }
     Card(
         colors = CardDefaults.cardColors(
-            containerColor =  MaterialTheme.colorScheme.background,
+            containerColor = MaterialTheme.colorScheme.background,
         ),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         modifier = Modifier
@@ -535,8 +534,7 @@ fun DateTimePickerComponent(context: Context) {
                         showTimePicker = false
                     }
                 ) { Text("OK") }
-            }
-            ,
+            },
             dismissButton = {
                 TextButton(
                     onClick = {
@@ -639,7 +637,7 @@ fun GridItem(
             .aspectRatio(1f)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) dark_cyan else Color.LightGray
+            containerColor = if (isSelected) cyan800 else Color.LightGray
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {

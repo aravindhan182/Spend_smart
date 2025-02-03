@@ -10,6 +10,7 @@ import androidx.compose.material.FabPosition
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,8 +33,8 @@ import com.PratikFagadiya.smoothanimationbottombar.ui.SmoothAnimationBottomBar
 import com.aravindh.spendsmart.navgraph.BottomBarScreen
 import com.aravindh.spendsmart.navgraph.BottomNavGraph
 import com.aravindh.spendsmart.ui.theme.SpendSmartTheme
-import com.aravindh.spendsmart.ui.theme.dark_cyan
-import com.aravindh.spendsmart.ui.theme.light_cyan
+import com.aravindh.spendsmart.ui.theme.cyan300
+import com.aravindh.spendsmart.ui.theme.white
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -75,24 +76,24 @@ class MainActivity : ComponentActivity() {
                 )
                 val isBottomBarDestination = screens.any { it.route == currentDestination?.route }
                 Scaffold(bottomBar = {
-                       if (isBottomBarDestination){
-                    SmoothAnimationBottomBar(navController,
-                        bottomNavigationItems,
-                        initialIndex = currentIndex,
-                        bottomBarProperties = BottomBarProperties(
-                            backgroundColor = dark_cyan,
-                            indicatorColor = light_cyan.copy(alpha = 0.5F),
-                            iconTintColor = White,
-                            iconTintActiveColor = Black,
-                            textActiveColor = Black,
-                            cornerRadius = 18.dp,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 16.sp
-                        ),
-                        onSelectItem = {
-                            currentDestination?.hierarchy?.any { it.route == it.route } == true
-                        })
-                }
+                    if (isBottomBarDestination) {
+                        SmoothAnimationBottomBar(navController,
+                            bottomNavigationItems,
+                            initialIndex = currentIndex,
+                            bottomBarProperties = BottomBarProperties(
+                                backgroundColor = MaterialTheme.colorScheme.primary,
+                                indicatorColor = cyan300.copy(alpha = 0.5F),
+                                iconTintColor = White,
+                                iconTintActiveColor = Black,
+                                textActiveColor = MaterialTheme.colorScheme.onPrimary,
+                                cornerRadius = 18.dp,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 12.sp
+                            ),
+                            onSelectItem = {
+                                currentDestination?.hierarchy?.any { it.route == it.route } == true
+                            })
+                    }
                 }, floatingActionButton = {
                     if (isBottomBarDestination) {
                         FloatingActionButton(
@@ -100,7 +101,8 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate("fabRoute")
                             },
                             modifier = Modifier.padding(bottom = 80.dp),
-                            backgroundColor = Color.Red // Change color as needed
+                            backgroundColor = Color.Red,
+                            contentColor = white
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_add_24),

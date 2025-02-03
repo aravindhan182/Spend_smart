@@ -38,6 +38,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -63,7 +64,7 @@ import com.aravindh.spendsmart.ui.screens.model.ExpenseOrIncomeMutableView
 fun DailyScreen(navController: NavController) {
     Box(
         modifier = Modifier
-            .background(Color(0xFFF4EAF0))
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
         contentAlignment = Alignment.TopCenter
@@ -131,16 +132,19 @@ fun DailyScreen(navController: NavController) {
             ) {
                 Icon(
                     imageVector = Icons.Default.Menu,
-                    contentDescription = "Menu"
+                    contentDescription = "Menu",
+                    tint = androidx.compose.material3.MaterialTheme.colorScheme.tertiary
                 )
                 Text(
                     text = "Today Record",
                     fontWeight = FontWeight.Bold,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.tertiary,
                     style = MaterialTheme.typography.h6
                 )
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Search"
+                    contentDescription = "Search",
+                    tint = androidx.compose.material3.MaterialTheme.colorScheme.tertiary
                 )
             }
             ShutterView()
@@ -155,12 +159,12 @@ fun DailyScreen(navController: NavController) {
 
 @Composable
 fun IncomeOrExpenseRecyclerViewCard(item: ExpenseOrIncomeMutableView) {
-    Card(
+    OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF9e8e8)),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.secondary),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
@@ -172,6 +176,7 @@ fun IncomeOrExpenseRecyclerViewCard(item: ExpenseOrIncomeMutableView) {
                 modifier = Modifier
                     .weight(0.6f)
                     .fillMaxHeight()
+                    .background(color = androidx.compose.material3.MaterialTheme.colorScheme.secondary)
                     .padding(8.dp)
             ) {
                 AssistChip(
@@ -187,9 +192,9 @@ fun IncomeOrExpenseRecyclerViewCard(item: ExpenseOrIncomeMutableView) {
                 Text(text = item.value)
                 Button(
                     onClick = { /* TODO */ },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        backgroundColor = Color.White,
-                        contentColor = Color.Black
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.primary, // Background color
+                        contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary  // Text/Icon color
                     )
                 ) {
                     Text(text = "Edit")
@@ -200,7 +205,7 @@ fun IncomeOrExpenseRecyclerViewCard(item: ExpenseOrIncomeMutableView) {
                 modifier = Modifier
                     .weight(0.4f)
                     .fillMaxHeight()
-                    .background(color = Color(0xFFF5BDBD))
+                    .background(color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface)
                     .padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -235,7 +240,8 @@ fun ShutterView() {
         ) {
             androidx.compose.material.Icon(
                 imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                contentDescription = "Toggle Shutter"
+                contentDescription = "Toggle Shutter",
+                tint = androidx.compose.material3.MaterialTheme.colorScheme.tertiary
             )
         }
         AnimatedVisibility(visible = isExpanded) {
@@ -250,7 +256,7 @@ fun ShutterView() {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary),
                     elevation = CardDefaults.cardElevation(4.dp),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -330,7 +336,6 @@ fun ShutterView() {
                                 Text(
                                     text = "12,0000",
                                     textAlign = TextAlign.Start,
-                                    color = Color.Black,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
@@ -344,7 +349,6 @@ fun ShutterView() {
                                 Text(
                                     text = "13,0000",
                                     textAlign = TextAlign.Start,
-                                    color = Color.Black,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
@@ -359,7 +363,7 @@ fun ShutterView() {
                             Text(
                                 text = "Please be careful in your expense :)",
                                 textAlign = TextAlign.Center,
-                                fontStyle = FontStyle.Italic, color = Color.Black
+                                fontStyle = FontStyle.Italic
                             )
                         }
                     }
