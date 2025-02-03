@@ -27,7 +27,7 @@ fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntSta
             DatePickerEnhancedExample(navController = navController)
         }
         composable(route = BottomBarScreen.Analytics.route) {
-            AnalyticsScreen()
+            AnalyticsScreen(navController = navController)
         }
         composable(route = "fabRoute") {
             AddExpenseAndIncomeScreen(navController = navController)
