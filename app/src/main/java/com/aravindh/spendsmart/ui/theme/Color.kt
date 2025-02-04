@@ -29,6 +29,8 @@ val warmGray700 = Color(0xFF504A40)
 val warmGray800 = Color(0xFF423D33)
 val warmGray900 = Color(0xFF27241D)
 
+val gray = Color(0xFF1D1F1B)
+
 val red50 = Color(0xFFFFEEEE)
 val red100 = Color(0xFFFACDCD)
 val red200 = Color(0xFFF29B9B)

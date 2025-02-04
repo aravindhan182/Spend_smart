@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,8 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.aravindh.spendsmart.R
+import com.aravindh.spendsmart.ui.theme.cyan600
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
@@ -54,18 +55,23 @@ fun AnalyticsScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF4EAF0)),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.TopStart
     ) {
         Column {
-            Row {
+            Row(modifier = Modifier.padding(top = 8.dp)) {
                 IconButton(
                     onClick = { navController.popBackStack() }
                 ) {
-                    Icon(Icons.Filled.ArrowBack, "Back")
+                    Icon(Icons.Filled.ArrowBack, "Back", tint = MaterialTheme.colorScheme.tertiary)
                 }
                 Column(modifier = Modifier.padding(8.dp)) {
-                    Text(text = "Analytics", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Text(
+                        text = "Analytics",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
                 }
                 SimpleDropdownMenu()
             }
@@ -74,7 +80,7 @@ fun AnalyticsScreen(navController: NavController) {
                     .fillMaxWidth()
                     .padding(8.dp),
                 elevation = CardDefaults.cardElevation(5.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Column {
                     Row(
@@ -83,8 +89,16 @@ fun AnalyticsScreen(navController: NavController) {
                             .padding(start = 8.dp, top = 8.dp, end = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "INCOME", modifier = Modifier.padding(8.dp))
-                        Text(text = "EXPENSE", modifier = Modifier.padding(8.dp))
+                        Text(
+                            text = "INCOME",
+                            modifier = Modifier.padding(8.dp),
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "EXPENSE",
+                            modifier = Modifier.padding(8.dp),
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                     Row(
                         modifier = Modifier
@@ -95,11 +109,13 @@ fun AnalyticsScreen(navController: NavController) {
                         Text(
                             text = "50,000",
                             modifier = Modifier.padding(8.dp),
-                            color = Color(0xFF095b09)
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF13af15)
                         )
                         Text(
                             text = "60,000",
                             modifier = Modifier.padding(8.dp),
+                            fontWeight = FontWeight.SemiBold,
                             color = Color(0xFFD12410)
                         )
                     }
@@ -109,6 +125,7 @@ fun AnalyticsScreen(navController: NavController) {
                 text = "Expense Overview",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.padding(start = 8.dp)
             )
             CreatePieChart()
@@ -149,6 +166,7 @@ fun CreatePieChart() {
                             this.isDrawHoleEnabled = false
                             this.legend.isEnabled = true
                             this.legend.textSize = 14F
+                            this.legend.textColor = R.color.white
                             this.legend.horizontalAlignment =
                                 Legend.LegendHorizontalAlignment.CENTER
                             this.setEntryLabelColor(R.color.brown)
@@ -186,7 +204,7 @@ fun updatePieChartWithData(
     ds.xValuePosition = PieDataSet.ValuePosition.INSIDE_SLICE
     ds.sliceSpace = 2f
 
-    ds.valueTextColor = R.color.brown
+    ds.valueTextColor = R.color.white
     ds.valueTextSize = 18f
     ds.valueTypeface = Typeface.DEFAULT
     val d = PieData(ds)
@@ -201,27 +219,33 @@ fun SimpleDropdownMenu() {
     var selectedOption by remember { mutableStateOf(options[0]) }
     val context = LocalContext.current
 
-    Box(modifier = Modifier.fillMaxWidth().padding(start = 4.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 4.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)
+    ) {
         OutlinedButton(
             onClick = { expanded = true },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            border = BorderStroke(2.dp, cyan600)
         ) {
-            Text(selectedOption, color = Color.Black)
+            Text(selectedOption, color = cyan600)
             Icon(
                 imageVector = Icons.Filled.ArrowDropDown,
                 contentDescription = "Dropdown",
                 modifier = Modifier.padding(start = 8.dp),
-                tint = Color.Black
+                tint = cyan600
             )
         }
 
         DropdownMenu(
+            modifier = Modifier.background(MaterialTheme.colorScheme.inverseSurface),
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option, color = Color.Black) },
+                    text = { Text(option, color = MaterialTheme.colorScheme.tertiary) },
                     onClick = {
                         selectedOption = option
                         expanded = false

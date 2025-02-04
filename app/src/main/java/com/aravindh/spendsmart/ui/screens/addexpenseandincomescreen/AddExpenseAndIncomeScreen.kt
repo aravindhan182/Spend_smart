@@ -40,6 +40,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -80,7 +81,6 @@ import java.util.Calendar
 import java.util.Locale
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseAndIncomeScreen(navController: NavController) {
     var selectedText by remember { mutableStateOf("INCOME") }
@@ -97,7 +97,7 @@ fun AddExpenseAndIncomeScreen(navController: NavController) {
                     modifier = Modifier
                         .align(Alignment.TopStart)
                 ) {
-                    Icon(Icons.Filled.ArrowBack, "Back")
+                    Icon(Icons.Filled.ArrowBack, "Back", tint = MaterialTheme.colorScheme.tertiary)
                 }
                 Column(
                     modifier = Modifier
@@ -105,7 +105,12 @@ fun AddExpenseAndIncomeScreen(navController: NavController) {
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = selectedText, fontWeight = FontWeight.Bold, fontSize = 24.sp)
+                    Text(
+                        text = selectedText,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
 
                     Spacer(modifier = Modifier.padding(8.dp))
                     selectedText = dropDownWithTextField()
@@ -125,10 +130,16 @@ fun AddExpenseAndIncomeScreen(navController: NavController) {
                             )
                         },
                         colors = TextFieldDefaults.colors(
-                            focusedLabelColor = MaterialTheme.colorScheme.outline,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.outline,
-                            focusedContainerColor = MaterialTheme.colorScheme.background,
-                            unfocusedContainerColor = MaterialTheme.colorScheme.background
+                            focusedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
+                            focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                            focusedTrailingIconColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedTrailingIconColor = MaterialTheme.colorScheme.tertiary
                         ),
                     )
                     Spacer(modifier = Modifier.padding(8.dp))
@@ -168,9 +179,20 @@ fun dropDownWithTextField(): String {
                     readOnly = true,
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-                    }
+                    },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        focusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
+                        focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                        focusedTrailingIconColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedTrailingIconColor = MaterialTheme.colorScheme.tertiary
+                    )
                 )
                 ExposedDropdownMenu(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.inverseSurface),
                     expanded = isExpanded,
                     onDismissRequest = { isExpanded = false }) {
                     list.forEachIndexed { index, s ->
@@ -180,7 +202,8 @@ fun dropDownWithTextField(): String {
                                 selectedText = list[index]
                                 isExpanded = false
                             },
-                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.tertiary)
                         )
                     }
                 }
@@ -193,11 +216,22 @@ fun dropDownWithTextField(): String {
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.dollar_minimalistic_svgrepo_com),
-                        contentDescription = "Add"
+                        contentDescription = "Add",
+                        tint = MaterialTheme.colorScheme.tertiary
                     )
                 },
                 onValueChange = { textFieldValue = it },
-                label = { Text("Amount") }
+                label = { Text("Amount", color = MaterialTheme.colorScheme.tertiary) },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
+                    focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                    focusedTrailingIconColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedTrailingIconColor = MaterialTheme.colorScheme.tertiary
+                )
             )
         }
     }
@@ -213,7 +247,6 @@ fun CategoryCardView(selectedText: String) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedCategoryIndex by remember { mutableStateOf(-1) }
     val isIncome = selectedText == "INCOME"
-    // Main Card
     Card(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         modifier = Modifier
@@ -252,7 +285,6 @@ fun CategoryCardView(selectedText: String) {
         }
     }
 
-    // Bottom Sheet
     if (showBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = { showBottomSheet = false },
@@ -315,7 +347,7 @@ fun CategoryCardView(selectedText: String) {
                 expenseCategoriesIcons
             )) else (Catergories(incomeCategories, incomeCategoriesIcons))
             LazyVerticalGrid(
-                columns = GridCells.Fixed(2), // 2 columns
+                columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(16.dp),
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -376,7 +408,7 @@ fun PaymentMethodCardView() {
                         ImageVector.vectorResource(id = R.drawable.reshot_icon_computer_dollar_nfvhye9jp4)
                     )
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(2), // 2 columns
+                        columns = GridCells.Fixed(2),
                         contentPadding = PaddingValues(16.dp),
                         modifier = Modifier.fillMaxSize(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -452,7 +484,7 @@ fun DateTimePickerComponent(context: Context) {
 
         Button(
             onClick = {
-                showDatePicker = true //changing the visibility state
+                showDatePicker = true
             },
             modifier = Modifier.fillMaxWidth(),
         ) {
@@ -465,7 +497,7 @@ fun DateTimePickerComponent(context: Context) {
 
         Button(
             onClick = {
-                showTimePicker = true //changing the visibility state
+                showTimePicker = true
             },
             modifier = Modifier.fillMaxWidth(),
         ) {
@@ -474,10 +506,10 @@ fun DateTimePickerComponent(context: Context) {
 
     }
 
-// date picker component
+
     if (showDatePicker) {
         DatePickerDialog(
-            onDismissRequest = { /*TODO*/ },
+            onDismissRequest = { },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -511,10 +543,10 @@ fun DateTimePickerComponent(context: Context) {
         }
     }
 
-// time picker component
+
     if (showTimePicker) {
         TimePickerDialog(
-            onDismissRequest = { /*TODO*/ },
+            onDismissRequest = { },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -612,14 +644,15 @@ fun MyExtendedFab() {
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.save_svgrepo_com),
-                    contentDescription = "Add"
+                    contentDescription = "Add",
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd),
             shape = RoundedCornerShape(12.dp),
             containerColor = Color(0xFFF42121),
-            contentColor = Color(0xFFFFFFFF)
+            contentColor =  MaterialTheme.colorScheme.tertiary
         )
     }
 }

@@ -50,6 +50,9 @@ import androidx.navigation.NavController
 import com.aravindh.spendsmart.R
 import com.aravindh.spendsmart.ui.screens.daily.IncomeOrExpenseRecyclerViewCard
 import com.aravindh.spendsmart.ui.screens.model.ExpenseOrIncomeMutableView
+import com.aravindh.spendsmart.ui.theme.cyan400
+import com.aravindh.spendsmart.ui.theme.cyan600
+import com.aravindh.spendsmart.ui.theme.red400
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
@@ -72,18 +75,18 @@ fun MonthlyScreen(navController: NavController) {
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize() .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
     ) {
         IconButton(
             onClick = { navController.popBackStack() },
             modifier = Modifier
                 .align(Alignment.TopStart)
         ) {
-            Icon(Icons.Filled.ArrowBack, "Back")
+            Icon(Icons.Filled.ArrowBack, "Back",tint = androidx.compose.material3.MaterialTheme.colorScheme.tertiary)
         }
     }
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(start = 8.dp, end = 8.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -105,7 +108,7 @@ fun MonthlyScreen(navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp, end = 16.dp),
+                .padding(start = 8.dp, top = 8.dp, bottom = 8.dp, end = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             var monthSelectionButtonLabel by remember {
@@ -117,11 +120,12 @@ fun MonthlyScreen(navController: NavController) {
             Text(
                 text = "Monthly Record",
                 fontWeight = FontWeight.Bold,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.padding(top = 8.dp),
                 style = MaterialTheme.typography.h6
             )
-            OutlinedButton(onClick = { visible = true }) {
-                Text(text = monthSelectionButtonLabel, color = Color.Black)
+            OutlinedButton(onClick = { visible = true }, border = BorderStroke(2.dp, cyan600)) {
+                Text(text = monthSelectionButtonLabel, color = cyan600)
             }
         }
         val ls = listOf<ExpenseOrIncomeMutableView>(
@@ -219,6 +223,7 @@ fun MonthPicker(
     if (visible) {
         androidx.compose.material.AlertDialog(
             shape = RoundedCornerShape(10),
+            backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
             title = {},
             text = {
                 Column {
@@ -230,6 +235,7 @@ fun MonthPicker(
                         Icon(
                             imageVector = Icons.Rounded.KeyboardArrowDown,
                             contentDescription = null,
+                            tint = androidx.compose.material3.MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier
                                 .size(35.dp)
                                 .rotate(90f)
@@ -245,11 +251,13 @@ fun MonthPicker(
                             text = year.toString(),
                             modifier = Modifier.padding(20.dp),
                             fontSize = 24.sp,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.tertiary,
                             fontWeight = FontWeight.Bold
                         )
                         Icon(
                             imageVector = Icons.Rounded.KeyboardArrowDown,
                             contentDescription = null,
+                            tint = androidx.compose.material3.MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier
                                 .size(35.dp)
                                 .rotate(-90f)
@@ -266,12 +274,12 @@ fun MonthPicker(
                         modifier = Modifier
                             .padding(top = 30.dp)
                             .fillMaxWidth()
-                            .background(Color.White)
+                            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
                     ) {
                         FlowRow(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color.White),
+                                .background(androidx.compose.material3.MaterialTheme.colorScheme.background),
                             mainAxisSpacing = 16.dp,
                             crossAxisSpacing = 16.dp,
                             mainAxisAlignment = MainAxisAlignment.Center,
@@ -286,7 +294,7 @@ fun MonthPicker(
                                             indication = null,
                                             interactionSource = interactionSource,
                                             onClick = { month = it })
-                                        .background(color = Color.White),
+                                        .background(color = androidx.compose.material3.MaterialTheme.colorScheme.background),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     val animationSize by animateDpAsState(
@@ -301,13 +309,13 @@ fun MonthPicker(
                                         modifier = Modifier
                                             .size(animationSize)
                                             .background(
-                                                color = if (month == it) Color.Blue else Color.White,
+                                                color = if (month == it) red400 else Color.White,
                                                 shape = CircleShape
                                             )
                                     )
                                     Text(
                                         text = it,
-                                        color = if (month == it) Color.White else Color.Black
+                                        color = androidx.compose.material3.MaterialTheme.colorScheme.tertiary
                                     )
 
                                 }
@@ -348,12 +356,12 @@ fun MonthPicker(
                             )
                         },
                         shape = CircleShape,
-                        border = BorderStroke(1.dp, color = Color.Blue),
-                        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.White)
+                        border = BorderStroke(1.dp, color = androidx.compose.material3.MaterialTheme.colorScheme.tertiary),
+                        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.primary)
                     ) {
                         Text(
                             text = "OK",
-                            color = Color.Blue,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.tertiary,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Medium
                         )
