@@ -5,13 +5,18 @@ import android.content.Context
 import android.icu.util.Calendar
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -29,9 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.aravindh.spendsmart.ui.theme.white
 
 
 @Composable
@@ -49,27 +56,56 @@ fun DatePickerEnhancedExample(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .background(color = MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
-        Button(
-            onClick = { openCalendar = true },
+        Card(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
+                .fillMaxWidth()
+                .padding(16.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
+            elevation = CardDefaults.cardElevation(4.dp),
+            shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(1.dp, color = white)
         ) {
             Text(
-                text = "Select Date",
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                color = Color.White
+                text = "You can select date range here",
+                fontStyle = FontStyle.Italic,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
             )
-        }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Card(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .weight(1f),
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(1.dp, color = white)
+                ) {
+                    Column(modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceVariant)) {
+                        Text("From Date", modifier = Modifier.padding(16.dp), color = white)
+                    }
+                }
 
+                Card(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .weight(1f),
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(1.dp, color = white)
+                ) {
+                    Column(modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceVariant)) {
+                        Text("To Date", modifier = Modifier.padding(16.dp), color = white)
+                    }
+                }
+            }
+        }
         Spacer(modifier = Modifier.height(16.dp))
 
         AnimatedVisibility(
@@ -84,7 +120,7 @@ fun DatePickerEnhancedExample(navController: NavController) {
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
                         text = "Selected Date: $selectedDate",
