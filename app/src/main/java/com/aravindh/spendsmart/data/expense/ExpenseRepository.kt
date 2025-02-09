@@ -1,6 +1,8 @@
 package com.aravindh.spendsmart.data.expense
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.aravindh.spendsmart.data.AppDatabase
 
 class ExpenseRepository(private val dao: ExpenseDao) {
@@ -8,6 +10,7 @@ class ExpenseRepository(private val dao: ExpenseDao) {
     companion object {
         private var INSTANCE: ExpenseRepository? = null
 
+        @RequiresApi(Build.VERSION_CODES.O)
         fun getInstance(context: Context): ExpenseRepository {
             val instance = INSTANCE
             if (instance != null) {

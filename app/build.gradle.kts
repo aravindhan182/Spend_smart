@@ -62,6 +62,9 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.compose.material:material:1.4.2")
     implementation("com.google.accompanist:accompanist-flowlayout:0.27.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("androidx.compose.runtime:runtime-livedata:1.3.0")
+
 
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-ktx:$roomVersion")

@@ -57,7 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.aravindh.spendsmart.R
-import com.aravindh.spendsmart.ui.screens.model.ExpenseOrIncomeMutableView
+import com.aravindh.spendsmart.ui.screens.model.TransactionMutableView
 
 
 @Composable
@@ -70,59 +70,6 @@ fun DailyScreen(navController: NavController) {
         contentAlignment = Alignment.TopCenter
     ) {
         Column {
-
-            val ls = listOf<ExpenseOrIncomeMutableView>(
-                ExpenseOrIncomeMutableView(
-                    id = 1,
-                    "INCOME",
-                    "50.00",
-                    category = ImageVector.vectorResource(id = R.drawable.reshot_icon_money_transport_zx3wfh7j68),
-                    date = "june 24, 2024",
-                    time = "05:45 pm",
-                    paymentMethod = "Debit card",
-                    notes = "Hi I am mrcho"
-                ),
-                ExpenseOrIncomeMutableView(
-                    id = 2,
-                    "INCOME",
-                    "340.00",
-                    category = ImageVector.vectorResource(id = R.drawable.reshot_icon_computer_dollar_nfvhye9jp4),
-                    date = "april 30, 2024",
-                    time = "03:23 am",
-                    paymentMethod = "Paytm",
-                    notes = "Hi, I am stabbin"
-                ),
-                ExpenseOrIncomeMutableView(
-                    id = 3,
-                    "EXPENSE",
-                    "540.00",
-                    category = ImageVector.vectorResource(id = R.drawable.reshot_icon_money_transport_zx3wfh7j68),
-                    date = "march 12, 2024",
-                    time = "12:45 pm",
-                    paymentMethod = "debit card",
-                    notes = "Hi, I am kandha"
-                ),
-                ExpenseOrIncomeMutableView(
-                    id = 4,
-                    "INCOME",
-                    "5320.00",
-                    category = ImageVector.vectorResource(id = R.drawable.reshot_icon_money_transport_zx3wfh7j68),
-                    date = "january 12, 2025",
-                    time = "04:05 am",
-                    paymentMethod = "gift cards",
-                    notes = "Hi, I am kali"
-                ),
-                ExpenseOrIncomeMutableView(
-                    id = 5,
-                    "INCOME",
-                    "130.00",
-                    category = ImageVector.vectorResource(id = R.drawable.reshot_icon_computer_dollar_nfvhye9jp4),
-                    date = "january 20, 2025",
-                    time = "04:23 pm",
-                    paymentMethod = "voucher",
-                    notes = "Hi I am aravindh"
-                ),
-            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -148,17 +95,17 @@ fun DailyScreen(navController: NavController) {
                 )
             }
             ShutterView()
-            LazyColumn {
+         /*   LazyColumn {
                 items(ls) { item ->
                     IncomeOrExpenseRecyclerViewCard(item = item)
                 }
-            }
+            }*/
         }
     }
 }
 
-@Composable
-fun IncomeOrExpenseRecyclerViewCard(item: ExpenseOrIncomeMutableView) {
+/*@Composable
+fun IncomeOrExpenseRecyclerViewCard(item: TransactionMutableView) {
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -191,7 +138,7 @@ fun IncomeOrExpenseRecyclerViewCard(item: ExpenseOrIncomeMutableView) {
                 Text(text = item.notes, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                 Text(text = item.value)
                 Button(
-                    onClick = { /* TODO */ },
+                    onClick = { *//* TODO *//* },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.primary, // Background color
                         contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary  // Text/Icon color
@@ -218,7 +165,7 @@ fun IncomeOrExpenseRecyclerViewCard(item: ExpenseOrIncomeMutableView) {
             }
         }
     }
-}
+}*/
 
 
 @Composable
