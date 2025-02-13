@@ -2,7 +2,7 @@ package com.aravindh.spendsmart.ui.screens.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.aravindh.spendsmart.data.expense.ExpenseCategory
-import com.aravindh.spendsmart.data.income.IncomeCategory
+import com.aravindh.spendsmart.data.expense.IncomeCategory
 
 data class ExpenseCategoryView(
     var catergoryName: List<ExpenseCategory>,

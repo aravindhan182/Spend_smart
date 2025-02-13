@@ -7,25 +7,21 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.aravindh.spendsmart.adapter.DateTimeAdapter
 import com.aravindh.spendsmart.convertors.DateConvertor
 import com.aravindh.spendsmart.convertors.LocalTimeConverter
-import com.aravindh.spendsmart.data.expense.Expense
-import com.aravindh.spendsmart.data.expense.ExpenseDao
-import com.aravindh.spendsmart.data.income.Income
-import com.aravindh.spendsmart.data.income.IncomeDao
+import com.aravindh.spendsmart.data.expense.TransactionDao
+import com.aravindh.spendsmart.data.expense.Transaction
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Database(
-    entities = [Income::class, Expense::class],
+    entities = [Transaction::class],
     version = 1,
     exportSchema = false
 )
 @TypeConverters(
     DateConvertor::class,LocalTimeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun incomeDao(): IncomeDao
-    abstract fun expenseDao(): ExpenseDao
+    abstract fun expenseDao(): TransactionDao
 
     companion object {
         @Volatile

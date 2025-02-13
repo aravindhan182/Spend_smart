@@ -1,5 +1,7 @@
 package com.aravindh.spendsmart.ui.screens.daily
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
@@ -42,6 +44,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -57,11 +60,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.aravindh.spendsmart.R
+import com.aravindh.spendsmart.data.expense.ExpenseCategory
+import com.aravindh.spendsmart.data.expense.IncomeCategory
+import com.aravindh.spendsmart.data.expense.TransactionType
 import com.aravindh.spendsmart.ui.screens.model.TransactionMutableView
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DailyScreen(navController: NavController) {
+fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
+
+    val allTransaction by viewModel.allTransactions.observeAsState()
     Box(
         modifier = Modifier
             .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
@@ -95,16 +104,128 @@ fun DailyScreen(navController: NavController) {
                 )
             }
             ShutterView()
-         /*   LazyColumn {
-                items(ls) { item ->
-                    IncomeOrExpenseRecyclerViewCard(item = item)
+            val ls = mutableListOf<TransactionMutableView>()
+            allTransaction?.forEach { transaction ->
+                val incomeCategoryImages: ImageVector? = when {
+                    (transaction.incomeCategory == IncomeCategory.ALLOWANCE) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_money_transport_zx3wfh7j68)
+                    }
+
+                    (transaction.incomeCategory == IncomeCategory.SALARY) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_send_money_h9mlb4d7ez)
+                    }
+
+                    (transaction.incomeCategory == IncomeCategory.CRYPTO) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_money_making_zyl8m5jrqs)
+                    }
+
+                    (transaction.incomeCategory == IncomeCategory.OTHERS) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_team_money_8nhdr7vzfb)
+                    }
+
+                    (transaction.incomeCategory == IncomeCategory.AWARDS) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_money_bag_ugdnplyzv7)
+                    }
+
+                    (transaction.incomeCategory == IncomeCategory.COUPONS) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_voucher_4vpc8kwb9g)
+                    }
+
+                    (transaction.incomeCategory == IncomeCategory.SALE) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_sale_cw9v2ujp7f)
+                    }
+
+                    (transaction.incomeCategory == IncomeCategory.RENTAL) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_house_loan_pny3fgzjt4)
+                    }
+
+                    (transaction.incomeCategory == IncomeCategory.GIFTS) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_special_gift_ueh2ny567x)
+                    }
+
+                    else -> {
+                        null
+                    }
                 }
-            }*/
+                val expenseCategoryImages: ImageVector? = when {
+                    (transaction.expenseCategory == ExpenseCategory.BEAUTY) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_makeup_k7vs8byt5a)
+                    }
+
+                    (transaction.expenseCategory == ExpenseCategory.VEHICLE) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_electric_car_y8tgpu3rb7)
+                    }
+
+                    (transaction.expenseCategory == ExpenseCategory.CLOTHING) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_clothes_lytbq7vgmj)
+                    }
+
+                    (transaction.expenseCategory == ExpenseCategory.EDUCATION) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_education_apps_yawm95r4pl)
+                    }
+
+                    (transaction.expenseCategory == ExpenseCategory.HOME) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_home_78ypw4dhuc)
+                    }
+
+                    (transaction.expenseCategory == ExpenseCategory.FOOD) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_unhealthy_food_g7mubj94z3)
+                    }
+
+                    (transaction.expenseCategory == ExpenseCategory.TRANSPORT) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_train_platform_jv564rcu89)
+                    }
+
+                    (transaction.expenseCategory == ExpenseCategory.SHOPPING) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_woman_shopping_nl38vsbhzr)
+                    }
+
+                    (transaction.expenseCategory == ExpenseCategory.ENTERTAINMENT) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_sports_kl9fswqdhc)
+                    }
+
+                    (transaction.expenseCategory == ExpenseCategory.INSURANCE) -> {
+                        ImageVector.vectorResource(
+                            id = R.drawable.reshot_icon_insurance_slnfkqrbe3
+                        )
+                    }
+
+                    (transaction.expenseCategory == ExpenseCategory.RECHARGE) -> {
+                        ImageVector.vectorResource(id = R.drawable.reshot_icon_rechargeable_battery_q3jzw68n24)
+                    }
+
+                    else -> {
+                        null
+                    }
+                }
+
+                ls.add(
+                    TransactionMutableView(
+                        transactionType = transaction.transactionType,
+                        amount = transaction.amount.toString(),
+                        notes = transaction.notes,
+                        incomeCategory = transaction.incomeCategory,
+                        incomeCategoryImage = incomeCategoryImages,
+                        expenseCategory = transaction.expenseCategory,
+                        expenseCategoryImage = expenseCategoryImages,
+                        paymentMethod = transaction.paymentMethod,
+                        createdDate = transaction.createdDate,
+                        createdTime = transaction.createdTime
+                    )
+                )
+            }
+            if (!ls.isNullOrEmpty()) {
+                LazyColumn {
+                    items(ls) { item ->
+                        IncomeOrExpenseRecyclerViewCard(item = item)
+                    }
+                }
+            }
         }
     }
 }
 
-/*@Composable
+@Composable
 fun IncomeOrExpenseRecyclerViewCard(item: TransactionMutableView) {
     OutlinedCard(
         modifier = Modifier
@@ -128,7 +249,7 @@ fun IncomeOrExpenseRecyclerViewCard(item: TransactionMutableView) {
             ) {
                 AssistChip(
                     onClick = { },
-                    label = { Text(item.title, color = Color.Black) },
+                    label = { Text(item.transactionType.value, color = Color.Black) },
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = Color.LightGray
                     ),
@@ -136,12 +257,12 @@ fun IncomeOrExpenseRecyclerViewCard(item: TransactionMutableView) {
                     border = BorderStroke(2.dp, Color.LightGray)
                 )
                 Text(text = item.notes, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
-                Text(text = item.value)
+                Text(text = item.amount)
                 Button(
-                    onClick = { *//* TODO *//* },
+                    onClick = { },
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.primary, // Background color
-                        contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary  // Text/Icon color
+                        backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                        contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text(text = "Edit")
@@ -157,16 +278,21 @@ fun IncomeOrExpenseRecyclerViewCard(item: TransactionMutableView) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Image(
-                    imageVector = item.category,
-                    contentDescription = "category image",
-                    modifier = Modifier.size(100.dp)
-                )
+                (if (item.transactionType == TransactionType.INCOME) {
+                    item.incomeCategoryImage
+                } else {
+                    item.expenseCategoryImage
+                })?.let {
+                    Image(
+                        imageVector = it,
+                        contentDescription = "category image",
+                        modifier = Modifier.size(100.dp)
+                    )
+                }
             }
         }
     }
-}*/
-
+}
 
 @Composable
 fun ShutterView() {

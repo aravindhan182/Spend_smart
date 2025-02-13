@@ -1,14 +1,13 @@
-package com.aravindh.spendsmart.data.income
+package com.aravindh.spendsmart.data.expense
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 
-@Entity(tableName = "income")
-data class Income(
+@Entity(tableName = "transactions")
+data class Transaction(
 
     @PrimaryKey @ColumnInfo(name = "id")
     val id: String,
@@ -25,12 +24,39 @@ data class Income(
     @ColumnInfo(name = "amount")
     val amount: Double,
 
-    @ColumnInfo(name = "income_category")
-    var incomeCategory: IncomeCategory,
+    @ColumnInfo(name = "expenseCategory")
+    var expenseCategory: ExpenseCategory?,
+
+    @ColumnInfo(name = "IncomeCategory")
+    var incomeCategory: IncomeCategory?,
+
+    @ColumnInfo(name = "payment_method")
+    var paymentMethod: PaymentMethod?,
 
     @ColumnInfo(name = "notes")
     var notes: String
 )
+
+enum class ExpenseCategory(val code: Int, val value: String) {
+    BEAUTY(1, "Beauty"),
+    VEHICLE(1, "Vehicle"),
+    CLOTHING(1, "Clothing"),
+    EDUCATION(1, "Education"),
+    HOME(1, "Home"),
+    FOOD(1, "Food"),
+    TRANSPORT(1, "Transport"),
+    SHOPPING(1, "Shopping"),
+    ENTERTAINMENT(1, "Entertainment"),
+    INSURANCE(1, "Insurance"),
+    RECHARGE(1, "Recharge"),
+}
+
+enum class PaymentMethod(val code: Int, val value: String) {
+    CASH(1, "Cash"),
+    CARD(2, "Card"),
+    ACCOUNTS(3, "Accounts")
+}
+
 
 enum class TransactionType(val code: Int, var value: String) {
     INCOME(1, "INCOME"),

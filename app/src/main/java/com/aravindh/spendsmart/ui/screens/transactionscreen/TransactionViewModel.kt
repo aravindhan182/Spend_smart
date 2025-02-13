@@ -7,14 +7,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.aravindh.spendsmart.data.expense.Expense
 import com.aravindh.spendsmart.data.expense.ExpenseCategory
-import com.aravindh.spendsmart.data.expense.ExpenseRepository
+import com.aravindh.spendsmart.data.expense.IncomeCategory
 import com.aravindh.spendsmart.data.expense.PaymentMethod
-import com.aravindh.spendsmart.data.income.Income
-import com.aravindh.spendsmart.data.income.IncomeCategory
-import com.aravindh.spendsmart.data.income.IncomeRepository
-import com.aravindh.spendsmart.data.income.TransactionType
+import com.aravindh.spendsmart.data.expense.Transaction
+import com.aravindh.spendsmart.data.expense.TransactionRepository
+import com.aravindh.spendsmart.data.expense.TransactionType
 import com.aravindh.spendsmart.ui.screens.model.TransactionMutableErrorView
 import com.aravindh.spendsmart.ui.screens.model.TransactionMutableView
 import kotlinx.coroutines.launch
@@ -25,8 +23,8 @@ import java.util.UUID
 @RequiresApi(Build.VERSION_CODES.O)
 class TransactionViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val incomeRepository: IncomeRepository = IncomeRepository.getInstance(application)
-    private val expenseRepository: ExpenseRepository = ExpenseRepository.getInstance(application)
+    private val transactionRepository: TransactionRepository =
+        TransactionRepository.getInstance(application)
 
     private val _transactionData = MutableLiveData(
         TransactionMutableView(
@@ -74,63 +72,29 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
 
     fun saveTransaction() {
         viewModelScope.launch {
-            val transactionDataView = _transactionData.value
-
-            if (transactionDataView?.transactionType == TransactionType.INCOME) {
-                when {
-                    transactionDataView?.incomeCategory == null -> {
-                        _transactionDataError.value =
-                            TransactionMutableErrorView(amountError = "Please select transaction type")
-                    }
-                    transactionDataView.amount.isEmpty() -> {
-                        _transactionDataError.value =
-                            TransactionMutableErrorView(amountError = "Please enter the amount")
-                    }
-
-                    else -> {
-                        _transactionDataError.value = TransactionMutableErrorView()
-                        val uniqueId: String = UUID.randomUUID().toString()
-                        incomeRepository.addIncome(
-                            Income(
-                                id = uniqueId,
-                                transactionType = transactionDataView.transactionType,
-                                createdDate = transactionDataView.createdDate,
-                                createdTime = transactionDataView.createdTime,
-                                amount = transactionDataView.amount.toDouble(),
-                                incomeCategory = transactionDataView.incomeCategory,
-                                notes = transactionDataView.notes
-                            )
-                        )
-                    }
+            val transactionDataView = _transactionData.value!!
+            when {
+                transactionDataView.amount.isEmpty() -> {
+                    _transactionDataError.value =
+                        TransactionMutableErrorView(amountError = "Please enter the amount")
                 }
-            } else {
-                val uniqueId: String = UUID.randomUUID().toString()
-                when {
-                    transactionDataView?.expenseCategory == null -> {
-                        _transactionDataError.value =
-                            TransactionMutableErrorView(amountError = "Please select transaction type")
-                    }
 
-                    transactionDataView.amount.isEmpty() -> {
-                        _transactionDataError.value =
-                            TransactionMutableErrorView(amountError = "Please enter the amount")
-                    }
-
-                    else -> {
-                        _transactionDataError.value = TransactionMutableErrorView()
-                        expenseRepository.addExpense(
-                            Expense(
-                                id = uniqueId,
-                                createdDate = transactionDataView.createdDate,
-                                createdTime = transactionDataView.createdTime,
-                                transactionType = transactionDataView.transactionType,
-                                amount = transactionDataView.amount.toDouble(),
-                                expenseCategory = transactionDataView.expenseCategory,
-                                paymentMethod = transactionDataView.paymentMethod!!,
-                                notes = transactionDataView.notes
-                            )
+                else -> {
+                    _transactionDataError.value = TransactionMutableErrorView()
+                    val uniqueId: String = UUID.randomUUID().toString()
+                    transactionRepository.addTransaction(
+                        Transaction(
+                            id = uniqueId,
+                            transactionType = transactionDataView.transactionType,
+                            createdDate = transactionDataView.createdDate,
+                            createdTime = transactionDataView.createdTime,
+                            amount = transactionDataView.amount.toDouble(),
+                            incomeCategory = transactionDataView.incomeCategory,
+                            expenseCategory = transactionDataView.expenseCategory,
+                            paymentMethod = transactionDataView.paymentMethod,
+                            notes = transactionDataView.notes
                         )
-                    }
+                    )
                 }
             }
         }

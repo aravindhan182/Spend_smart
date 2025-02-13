@@ -75,9 +75,9 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.aravindh.spendsmart.R
 import com.aravindh.spendsmart.data.expense.ExpenseCategory
+import com.aravindh.spendsmart.data.expense.IncomeCategory
 import com.aravindh.spendsmart.data.expense.PaymentMethod
-import com.aravindh.spendsmart.data.income.IncomeCategory
-import com.aravindh.spendsmart.data.income.TransactionType
+import com.aravindh.spendsmart.data.expense.TransactionType
 import com.aravindh.spendsmart.ui.screens.model.ExpenseCategoryView
 import com.aravindh.spendsmart.ui.screens.model.IncomeCategoryView
 import com.aravindh.spendsmart.ui.screens.model.TransactionMutableView

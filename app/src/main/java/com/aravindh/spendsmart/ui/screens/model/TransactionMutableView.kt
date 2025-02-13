@@ -4,9 +4,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.aravindh.spendsmart.data.expense.ExpenseCategory
+import com.aravindh.spendsmart.data.expense.IncomeCategory
 import com.aravindh.spendsmart.data.expense.PaymentMethod
-import com.aravindh.spendsmart.data.income.IncomeCategory
-import com.aravindh.spendsmart.data.income.TransactionType
+import com.aravindh.spendsmart.data.expense.TransactionType
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -15,9 +15,9 @@ data class TransactionMutableView(
     var transactionType: TransactionType = TransactionType.INCOME,
     var amount: String = "",
     var notes: String = "",
-    var incomeCategory: IncomeCategory = IncomeCategory.SALE,
+    var incomeCategory: IncomeCategory? = IncomeCategory.SALE,
     var incomeCategoryImage: ImageVector? = null,
-    var expenseCategory: ExpenseCategory = ExpenseCategory.FOOD,
+    var expenseCategory: ExpenseCategory? = ExpenseCategory.FOOD,
     var expenseCategoryImage: ImageVector? = null,
     var paymentMethod: PaymentMethod? = null,
     var createdDate: LocalDate = LocalDate.now(),
