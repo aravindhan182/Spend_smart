@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import com.aravindh.spendsmart.data.AppDatabase
+import java.time.LocalDate
 
 class TransactionRepository(private val dao: TransactionDao) {
 
@@ -34,7 +35,15 @@ class TransactionRepository(private val dao: TransactionDao) {
         dao.insert(transaction)
     }
 
-    fun getTransactions():LiveData<List<Transaction>> {
-         return dao.getTransactions()
+    fun getTransactions(): LiveData<List<Transaction>> {
+        return dao.getTransactions()
+    }
+
+    fun getTodayExpense(today: LocalDate, tType: TransactionType): LiveData<Double?> {
+        return dao.getTodayExpense(today, tType)
+    }
+
+    fun getTodayIncome(today: LocalDate, tType: TransactionType): LiveData<Double?> {
+        return dao.getTodayExpense(today, tType)
     }
 }

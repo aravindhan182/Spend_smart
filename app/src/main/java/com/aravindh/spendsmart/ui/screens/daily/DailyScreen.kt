@@ -1,6 +1,7 @@
 package com.aravindh.spendsmart.ui.screens.daily
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDp
@@ -43,6 +44,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -71,6 +73,7 @@ import com.aravindh.spendsmart.ui.screens.model.TransactionMutableView
 fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
 
     val allTransaction by viewModel.allTransactions.observeAsState()
+    Log.d("vvv","$allTransaction")
     Box(
         modifier = Modifier
             .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
@@ -103,7 +106,7 @@ fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
                     tint = androidx.compose.material3.MaterialTheme.colorScheme.tertiary
                 )
             }
-            ShutterView()
+            ShutterView(viewModel = viewModel)
             val ls = mutableListOf<TransactionMutableView>()
             allTransaction?.forEach { transaction ->
                 val incomeCategoryImages: ImageVector? = when {
@@ -295,12 +298,21 @@ fun IncomeOrExpenseRecyclerViewCard(item: TransactionMutableView) {
 }
 
 @Composable
-fun ShutterView() {
+fun ShutterView(viewModel: DailyViewModel) {
     var isExpanded by remember { mutableStateOf(false) }
     val transition = updateTransition(targetState = isExpanded, label = "Shutter Animation")
-
+    val todayExpense by viewModel.todayExpense.observeAsState()
+    val todayIncome by viewModel.todayIncome.observeAsState()
     val offsetY by transition.animateDp(label = "Offset Y") { expanded ->
         if (expanded) 0.dp else (-100).dp
+    }
+    var warningMessage by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        warningMessage = if ((todayExpense ?: 0.0) > (todayIncome ?: 0.0)){
+            "Please be careful in your expense !"
+        } else {
+            "Good Maintaining,Keep it up :)"
+        }
     }
 
     Column(
@@ -407,7 +419,7 @@ fun ShutterView() {
                                 contentAlignment = Alignment.TopCenter
                             ) {
                                 Text(
-                                    text = "12,0000",
+                                    text = (todayIncome?:0.0).toString(),
                                     textAlign = TextAlign.Start,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -420,7 +432,7 @@ fun ShutterView() {
                                 contentAlignment = Alignment.TopCenter
                             ) {
                                 Text(
-                                    text = "13,0000",
+                                    text = (todayExpense?:0.0).toString(),
                                     textAlign = TextAlign.Start,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -434,7 +446,7 @@ fun ShutterView() {
                             contentAlignment = Alignment.TopCenter
                         ) {
                             Text(
-                                text = "Please be careful in your expense :)",
+                                text = warningMessage,
                                 textAlign = TextAlign.Center,
                                 fontStyle = FontStyle.Italic
                             )
