@@ -4,7 +4,13 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -14,6 +20,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +29,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,6 +60,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -73,7 +83,7 @@ import com.aravindh.spendsmart.ui.screens.model.TransactionMutableView
 fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
 
     val allTransaction by viewModel.allTransactions.observeAsState()
-    Log.d("vvv","$allTransaction")
+    Log.d("vvv", "$allTransaction")
     Box(
         modifier = Modifier
             .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
@@ -217,13 +227,40 @@ fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
                     )
                 )
             }
-            if (!ls.isNullOrEmpty()) {
+            if (ls.isNotEmpty()) {
                 LazyColumn {
                     items(ls) { item ->
                         IncomeOrExpenseRecyclerViewCard(item = item)
                     }
                 }
+            } else {
+                Box(modifier = Modifier.fillMaxSize().padding(top = 150.dp), contentAlignment = Alignment.TopCenter) {
+                    NorRecordFoundCardView()
+                }
             }
+        }
+    }
+}
+
+
+@Composable
+fun NorRecordFoundCardView() {
+    OutlinedCard(
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(8.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.secondary),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                modifier = Modifier.size(102.dp),
+                imageVector = ImageVector.vectorResource(id = R.drawable.data_searching_find_document_magnifier_searching_document_text_searching_svgrepo_com),
+                contentDescription = "No data image"
+            )
+            Spacer(modifier = Modifier.padding(8.dp))
+            Text(text = "No record found", fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }
@@ -297,6 +334,7 @@ fun IncomeOrExpenseRecyclerViewCard(item: TransactionMutableView) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ShutterView(viewModel: DailyViewModel) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -308,7 +346,7 @@ fun ShutterView(viewModel: DailyViewModel) {
     }
     var warningMessage by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
-        warningMessage = if ((todayExpense ?: 0.0) > (todayIncome ?: 0.0)){
+        warningMessage = if ((todayExpense ?: 0.0) > (todayIncome ?: 0.0)) {
             "Please be careful in your expense !"
         } else {
             "Good Maintaining,Keep it up :)"
@@ -419,7 +457,7 @@ fun ShutterView(viewModel: DailyViewModel) {
                                 contentAlignment = Alignment.TopCenter
                             ) {
                                 Text(
-                                    text = (todayIncome?:0.0).toString(),
+                                    text = (todayIncome ?: 0.0).toString(),
                                     textAlign = TextAlign.Start,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -432,7 +470,7 @@ fun ShutterView(viewModel: DailyViewModel) {
                                 contentAlignment = Alignment.TopCenter
                             ) {
                                 Text(
-                                    text = (todayExpense?:0.0).toString(),
+                                    text = (todayExpense ?: 0.0).toString(),
                                     textAlign = TextAlign.Start,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -458,3 +496,46 @@ fun ShutterView(viewModel: DailyViewModel) {
     }
 }
 
+@Composable
+fun ShimmerEffect(
+    modifier: Modifier,
+    widthOfShadowBrush: Int = 700,
+    angleOfAxisY: Float = 270f,
+    durationMillis: Int = 1000,
+) {
+    val transition = rememberInfiniteTransition(label = "")
+    val shimmerColors = listOf(
+        Color.White.copy(alpha = 0.3f),
+        Color.White.copy(alpha = 0.5f),
+        Color.White.copy(alpha = 1.0f),
+        Color.White.copy(alpha = 0.5f),
+        Color.White.copy(alpha = 0.3f),
+    )
+
+    val translateAnimation = transition.animateFloat(
+        initialValue = 0f,
+        targetValue = (durationMillis + widthOfShadowBrush).toFloat(),
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = durationMillis,
+                easing = LinearEasing,
+            ),
+            repeatMode = RepeatMode.Restart,
+        ),
+        label = "Shimmer loading animation",
+    )
+    val brush = Brush.linearGradient(
+        colors = shimmerColors,
+        start = Offset(x = translateAnimation.value - widthOfShadowBrush, y = 0.0f),
+        end = Offset(x = translateAnimation.value, y = angleOfAxisY),
+    )
+    Box(
+        modifier = modifier
+    ) {
+        Spacer(
+            modifier = Modifier
+                .matchParentSize()
+                .background(brush)
+        )
+    }
+}
