@@ -12,6 +12,7 @@ import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 data class TransactionMutableView(
+    var transactionID:String? = null,
     var transactionType: TransactionType = TransactionType.INCOME,
     var amount: String = "",
     var notes: String = "",

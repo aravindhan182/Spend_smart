@@ -34,8 +34,9 @@ fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntSta
         composable(route = BottomBarScreen.Analytics.route) {
             AnalyticsScreen(navController = navController)
         }
-        composable(route = "fabRoute") {
-            TransactionScreen(navController = navController, transactionViewModel)
+        composable(route = "fabRoute?transactionID={transactionID}") { backStackEntry ->
+            val transactionID = backStackEntry.arguments?.getString("transactionID") ?: ""
+            TransactionScreen(navController = navController, transactionViewModel, transactionID)
         }
     }
 

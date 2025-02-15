@@ -35,6 +35,10 @@ class TransactionRepository(private val dao: TransactionDao) {
         dao.insert(transaction)
     }
 
+    suspend fun updateTransaction(transaction: Transaction) {
+        dao.update(transaction)
+    }
+
     fun getTransactions(): LiveData<List<Transaction>> {
         return dao.getTransactions()
     }
@@ -45,5 +49,9 @@ class TransactionRepository(private val dao: TransactionDao) {
 
     fun getTodayIncome(today: LocalDate, tType: TransactionType): LiveData<Double?> {
         return dao.getTodayExpense(today, tType)
+    }
+
+    suspend fun getTransactionDetailById(id:String):Transaction {
+        return dao.getTransactionBtId(id)
     }
 }

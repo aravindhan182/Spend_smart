@@ -1,6 +1,7 @@
 package com.aravindh.spendsmart.ui.screens.transactionscreen
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -53,6 +54,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -90,7 +92,12 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TransactionScreen(navController: NavController, viewModel: TransactionViewModel) {
+fun TransactionScreen(
+    navController: NavController,
+    viewModel: TransactionViewModel,
+    transactionID: String?
+) {
+    val successfullySaved by viewModel.saved.observeAsState(false)
     val transaction by viewModel.transactionData.observeAsState(
         TransactionMutableView(
             transactionType = TransactionType.INCOME,
@@ -98,8 +105,17 @@ fun TransactionScreen(navController: NavController, viewModel: TransactionViewMo
             notes = ""
         )
     )
+
+    LaunchedEffect(successfullySaved) {
+        if (successfullySaved) {
+            navController.popBackStack()
+        }
+    }
+    if (!transactionID.isNullOrEmpty()) {
+        viewModel.getTransactionData(transactionID)
+    }
     Scaffold(
-        floatingActionButton = { MyExtendedFab(viewModel) },
+        floatingActionButton = { MyExtendedFab(viewModel, transactionID = transactionID) },
         content = { paddingValues ->
             Box(
                 modifier = Modifier
@@ -135,7 +151,7 @@ fun TransactionScreen(navController: NavController, viewModel: TransactionViewMo
                     Spacer(modifier = Modifier.padding(8.dp))
                     CategoryCardView(transaction.transactionType.value, viewModel)
                     Spacer(modifier = Modifier.padding(8.dp))
-                    if (transaction.transactionType  == TransactionType.EXPENSE){
+                    if (transaction.transactionType == TransactionType.EXPENSE) {
                         PaymentMethodCardView(viewModel)
                         Spacer(modifier = Modifier.padding(4.dp))
                     }
@@ -240,7 +256,8 @@ fun dropDownWithTextField(viewModel: TransactionViewModel): TransactionType {
             }
             Column(
                 modifier = Modifier
-                    .weight(1f).wrapContentHeight()
+                    .weight(1f)
+                    .wrapContentHeight()
             ) {
                 OutlinedTextField(
                     modifier = Modifier
@@ -258,7 +275,7 @@ fun dropDownWithTextField(viewModel: TransactionViewModel): TransactionType {
                     colors = TextFieldDefaults.colors(
                         errorTextColor = MaterialTheme.colorScheme.tertiary,
                         focusedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                        errorContainerColor =MaterialTheme.colorScheme.onTertiaryContainer ,
+                        errorContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
                         unfocusedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
                         focusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
                         unfocusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
@@ -671,11 +688,25 @@ fun TimePickerDialog(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MyExtendedFab(viewModel: TransactionViewModel) {
+fun MyExtendedFab(viewModel: TransactionViewModel, transactionID: String?) {
     Box {
+        var buttonText by remember {
+            mutableStateOf("")
+        }
+        buttonText = if (transactionID.isNullOrEmpty()) {
+            "SAVE"
+        } else {
+            "UPDATE"
+        }
         ExtendedFloatingActionButton(
-            onClick = { viewModel.saveTransaction() },
-            text = { Text("SAVE", fontSize = 16.sp) },
+            onClick = {
+                if (!transactionID.isNullOrEmpty()) {
+                    viewModel.saveTransaction(true)
+                } else {
+                    viewModel.saveTransaction(false)
+                }
+            },
+            text = { Text(buttonText, fontSize = 16.sp) },
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.save_svgrepo_com),

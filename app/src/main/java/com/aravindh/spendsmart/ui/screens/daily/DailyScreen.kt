@@ -1,7 +1,6 @@
 package com.aravindh.spendsmart.ui.screens.daily
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
@@ -15,6 +14,7 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,7 +52,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -83,7 +82,6 @@ import com.aravindh.spendsmart.ui.screens.model.TransactionMutableView
 fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
 
     val allTransaction by viewModel.allTransactions.observeAsState()
-    Log.d("vvv", "$allTransaction")
     Box(
         modifier = Modifier
             .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
@@ -214,6 +212,7 @@ fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
 
                 ls.add(
                     TransactionMutableView(
+                        transactionID = transaction.id,
                         transactionType = transaction.transactionType,
                         amount = transaction.amount.toString(),
                         notes = transaction.notes,
@@ -230,11 +229,18 @@ fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
             if (ls.isNotEmpty()) {
                 LazyColumn {
                     items(ls) { item ->
-                        IncomeOrExpenseRecyclerViewCard(item = item)
+                        IncomeOrExpenseRecyclerViewCard(item = item, onClick = {
+                            val paramValue = item.transactionID
+                            navController.navigate("fabRoute?transactionID=$paramValue")
+                        })
                     }
                 }
             } else {
-                Box(modifier = Modifier.fillMaxSize().padding(top = 150.dp), contentAlignment = Alignment.TopCenter) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 150.dp), contentAlignment = Alignment.TopCenter
+                ) {
                     NorRecordFoundCardView()
                 }
             }
@@ -266,11 +272,12 @@ fun NorRecordFoundCardView() {
 }
 
 @Composable
-fun IncomeOrExpenseRecyclerViewCard(item: TransactionMutableView) {
+fun IncomeOrExpenseRecyclerViewCard(item: TransactionMutableView, onClick: (String) -> Unit) {
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable { },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.secondary),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -299,7 +306,7 @@ fun IncomeOrExpenseRecyclerViewCard(item: TransactionMutableView) {
                 Text(text = item.notes, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                 Text(text = item.amount)
                 Button(
-                    onClick = { },
+                    onClick = { onClick(item.transactionID!!) },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
                         contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary

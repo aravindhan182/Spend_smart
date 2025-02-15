@@ -98,7 +98,8 @@ class MainActivity : ComponentActivity() {
                     if (isBottomBarDestination) {
                         FloatingActionButton(
                             onClick = {
-                                navController.navigate("fabRoute")
+                                val ls = ""
+                                navController.navigate("fabRoute?transactionID=$ls")
                             },
                             modifier = Modifier.padding(bottom = 80.dp),
                             backgroundColor = Color.Red,

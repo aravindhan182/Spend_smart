@@ -35,8 +35,28 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     )
     val transactionData: LiveData<TransactionMutableView> = _transactionData
 
+    private val _saved: MutableLiveData<Boolean> = MutableLiveData(false)
+    val saved: LiveData<Boolean> = _saved
+
     private val _transactionDataError = MutableLiveData(TransactionMutableErrorView())
     val transactionDataError: LiveData<TransactionMutableErrorView> = _transactionDataError
+
+    fun getTransactionData(transactionID: String) {
+        viewModelScope.launch {
+            val transactionDetail = transactionRepository.getTransactionDetailById(transactionID)
+            _transactionData.value = TransactionMutableView(
+                transactionID = transactionDetail.id,
+                transactionType = transactionDetail.transactionType,
+                createdDate = transactionDetail.createdDate,
+                createdTime = transactionDetail.createdTime,
+                amount = transactionDetail.amount.toString(),
+                notes = transactionDetail.notes,
+                incomeCategory = transactionDetail.incomeCategory,
+                expenseCategory = transactionDetail.expenseCategory,
+                paymentMethod = transactionDetail.paymentMethod,
+            )
+        }
+    }
 
     fun updateTransactionType(type: TransactionType) {
         _transactionData.value = _transactionData.value?.copy(transactionType = type)
@@ -70,7 +90,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         _transactionData.value = _transactionData.value?.copy(createdTime = time)
     }
 
-    fun saveTransaction() {
+    fun saveTransaction(isUpdate: Boolean = false) {
         viewModelScope.launch {
             val transactionDataView = _transactionData.value!!
             when {
@@ -80,21 +100,40 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
                 }
 
                 else -> {
-                    _transactionDataError.value = TransactionMutableErrorView()
-                    val uniqueId: String = UUID.randomUUID().toString()
-                    transactionRepository.addTransaction(
-                        Transaction(
-                            id = uniqueId,
-                            transactionType = transactionDataView.transactionType,
-                            createdDate = transactionDataView.createdDate,
-                            createdTime = transactionDataView.createdTime,
-                            amount = transactionDataView.amount.toDouble(),
-                            incomeCategory = transactionDataView.incomeCategory,
-                            expenseCategory = transactionDataView.expenseCategory,
-                            paymentMethod = transactionDataView.paymentMethod,
-                            notes = transactionDataView.notes
+                    if (isUpdate) {
+                        _transactionDataError.value = TransactionMutableErrorView()
+                        transactionRepository.updateTransaction(
+                            Transaction(
+                                id = transactionDataView.transactionID!!,
+                                transactionType = transactionDataView.transactionType,
+                                createdDate = transactionDataView.createdDate,
+                                createdTime = transactionDataView.createdTime,
+                                amount = transactionDataView.amount.toDouble(),
+                                incomeCategory = transactionDataView.incomeCategory,
+                                expenseCategory = transactionDataView.expenseCategory,
+                                paymentMethod = transactionDataView.paymentMethod,
+                                notes = transactionDataView.notes
+                            )
                         )
-                    )
+                        _saved.value = true
+                    } else {
+                        _transactionDataError.value = TransactionMutableErrorView()
+                        val uniqueId: String = UUID.randomUUID().toString()
+                        transactionRepository.addTransaction(
+                            Transaction(
+                                id = uniqueId,
+                                transactionType = transactionDataView.transactionType,
+                                createdDate = transactionDataView.createdDate,
+                                createdTime = transactionDataView.createdTime,
+                                amount = transactionDataView.amount.toDouble(),
+                                incomeCategory = transactionDataView.incomeCategory,
+                                expenseCategory = transactionDataView.expenseCategory,
+                                paymentMethod = transactionDataView.paymentMethod,
+                                notes = transactionDataView.notes
+                            )
+                        )
+                        _saved.value = true
+                    }
                 }
             }
         }
