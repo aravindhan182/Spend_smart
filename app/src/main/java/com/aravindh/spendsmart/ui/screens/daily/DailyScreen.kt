@@ -345,14 +345,11 @@ fun ShutterView(viewModel: DailyViewModel) {
         if (expanded) 0.dp else (-100).dp
     }
     var warningMessage by remember { mutableStateOf("") }
-    LaunchedEffect(Unit) {
-        warningMessage = if ((todayExpense ?: 0.0) > (todayIncome ?: 0.0)) {
-            "Please be careful in your expense !"
-        } else {
-            "Good Maintaining,Keep it up :)"
-        }
+    warningMessage = if ((todayExpense ?: 0.0) > (todayIncome ?: 0.0)) {
+        "Please be careful in your expense !"
+    } else {
+        "Good Maintaining,Keep it up :)"
     }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
