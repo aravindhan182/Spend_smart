@@ -35,14 +35,20 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
@@ -75,8 +81,12 @@ import com.aravindh.spendsmart.data.expense.ExpenseCategory
 import com.aravindh.spendsmart.data.expense.IncomeCategory
 import com.aravindh.spendsmart.data.expense.TransactionType
 import com.aravindh.spendsmart.ui.screens.model.TransactionMutableView
+import com.aravindh.spendsmart.ui.theme.red300
+import com.aravindh.spendsmart.ui.theme.red900
+import com.aravindh.spendsmart.ui.theme.warmGray700
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
@@ -115,7 +125,7 @@ fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
                 )
             }
             ShutterView(viewModel = viewModel)
-            val ls = mutableListOf<TransactionMutableView>()
+            val transactionList = mutableListOf<TransactionMutableView>()
             allTransaction?.forEach { transaction ->
                 val incomeCategoryImages: ImageVector? = when {
                     (transaction.incomeCategory == IncomeCategory.ALLOWANCE) -> {
@@ -210,7 +220,7 @@ fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
                     }
                 }
 
-                ls.add(
+                transactionList.add(
                     TransactionMutableView(
                         transactionID = transaction.id,
                         transactionType = transaction.transactionType,
@@ -226,13 +236,45 @@ fun DailyScreen(navController: NavController, viewModel: DailyViewModel) {
                     )
                 )
             }
-            if (ls.isNotEmpty()) {
+            if (transactionList.isNotEmpty()) {
                 LazyColumn {
-                    items(ls) { item ->
-                        IncomeOrExpenseRecyclerViewCard(item = item, onClick = {
-                            val paramValue = item.transactionID
-                            navController.navigate("fabRoute?transactionID=$paramValue")
-                        })
+                    items(transactionList, key = { it.transactionID!! }) { item ->
+                        val dismissState = rememberDismissState(
+                            confirmStateChange = { dismissValue ->
+                                if (dismissValue == DismissValue.DismissedToStart) {
+                                    item.transactionID?.let { viewModel.deleteTransaction(it) }
+                                    true
+                                } else {
+                                    false
+                                }
+                            }
+                        )
+                        SwipeToDismiss(
+                            state = dismissState,
+                            directions = setOf(DismissDirection.EndToStart),
+                            background = {
+                                val color = when (dismissState.dismissDirection) {
+                                    DismissDirection.EndToStart -> red900
+                                    else -> Color.Transparent
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(color)
+                                        .padding(horizontal = 20.dp),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+
+                                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.White)
+                                }
+                            },
+                            dismissContent = {
+                                IncomeOrExpenseRecyclerViewCard(item = item, onClick = {
+                                    val paramValue = item.transactionID
+                                    navController.navigate("fabRoute?transactionID=$paramValue")
+                                })
+                            }
+                        )
                     }
                 }
             } else {

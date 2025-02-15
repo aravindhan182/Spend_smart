@@ -51,7 +51,11 @@ class TransactionRepository(private val dao: TransactionDao) {
         return dao.getTodayExpense(today, tType)
     }
 
-    suspend fun getTransactionDetailById(id:String):Transaction {
+    suspend fun getTransactionDetailById(id: String): Transaction {
         return dao.getTransactionBtId(id)
+    }
+
+    suspend fun deleteById(id: String) {
+        dao.deleteById(id)
     }
 }

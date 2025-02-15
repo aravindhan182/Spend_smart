@@ -22,6 +22,9 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions")
     fun getTransactions(): LiveData<List<Transaction>>
 
+    @Query("delete from transactions where id = :id")
+    suspend fun deleteById(id: String)
+
     @Query("SELECT SUM(amount) FROM transactions where created_date = :today and transaction_type = :tType")
     fun getTodayExpense(today: LocalDate, tType: TransactionType): LiveData<Double?>
 
@@ -29,5 +32,5 @@ interface TransactionDao {
     fun getTodayIncome(today: LocalDate, tType: TransactionType): LiveData<Double?>
 
     @Query("SELECT * FROM transactions WHERE id = :id")
-   suspend fun getTransactionBtId(id: String): Transaction
+    suspend fun getTransactionBtId(id: String): Transaction
 }

@@ -58,6 +58,8 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+
+
     fun updateTransactionType(type: TransactionType) {
         _transactionData.value = _transactionData.value?.copy(transactionType = type)
     }
