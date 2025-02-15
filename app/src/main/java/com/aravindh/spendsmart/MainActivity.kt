@@ -95,7 +95,7 @@ class MainActivity : ComponentActivity() {
                             })
                     }
                 }, floatingActionButton = {
-                    if (isBottomBarDestination) {
+                    if (isBottomBarDestination && (currentDestination?.route != BottomBarScreen.Analytics.route)) {
                         FloatingActionButton(
                             onClick = {
                                 val ls = ""
