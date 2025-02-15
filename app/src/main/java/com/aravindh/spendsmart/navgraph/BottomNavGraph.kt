@@ -23,6 +23,7 @@ import com.aravindh.spendsmart.ui.screens.calendar.DatePickerEnhancedExample
 import com.aravindh.spendsmart.ui.screens.daily.DailyScreen
 import com.aravindh.spendsmart.ui.screens.daily.DailyViewModel
 import com.aravindh.spendsmart.ui.screens.montlyscreen.MonthlyScreen
+import com.aravindh.spendsmart.ui.screens.montlyscreen.MonthlyViewModel
 import com.aravindh.spendsmart.ui.screens.transactionscreen.TransactionScreen
 import com.aravindh.spendsmart.ui.screens.transactionscreen.TransactionViewModel
 
@@ -31,7 +32,10 @@ import com.aravindh.spendsmart.ui.screens.transactionscreen.TransactionViewModel
 fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntState) {
     val transactionViewModel: TransactionViewModel = viewModel()
     val dailyViewModel: DailyViewModel = viewModel()
-    Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+    val monthlyViewModel: MonthlyViewModel = viewModel()
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.background)) {
         NavHost(navController = navController, startDestination = BottomBarScreen.Daily.route,
             enterTransition = {
                 slideInHorizontally(initialOffsetX = { it }) + fadeIn(
@@ -62,7 +66,7 @@ fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntSta
                 DailyScreen(navController = navController, dailyViewModel)
             }
             composable(route = BottomBarScreen.Monthly.route) {
-                MonthlyScreen(navController = navController)
+                MonthlyScreen(navController = navController, monthlyViewModel)
             }
             composable(route = BottomBarScreen.Calendar.route) {
                 DatePickerEnhancedExample(navController = navController)

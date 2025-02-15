@@ -33,4 +33,7 @@ interface TransactionDao {
 
     @Query("SELECT * FROM transactions WHERE id = :id")
     suspend fun getTransactionBtId(id: String): Transaction
+
+    @Query("SELECT * FROM transactions WHERE (:yearMonth IS NOT NULL AND :yearMonth <> '' AND created_date LIKE :yearMonth || '%')")
+    fun getDataByYearMonth(yearMonth: String): LiveData<List<Transaction>>
 }

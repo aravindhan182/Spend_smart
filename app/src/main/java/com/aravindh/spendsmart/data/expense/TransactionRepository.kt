@@ -58,4 +58,8 @@ class TransactionRepository(private val dao: TransactionDao) {
     suspend fun deleteById(id: String) {
         dao.deleteById(id)
     }
+
+    fun getDataByYearMonth(yearMonth: String): LiveData<List<Transaction>> {
+        return dao.getDataByYearMonth(yearMonth)
+    }
 }

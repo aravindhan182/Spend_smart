@@ -1,6 +1,7 @@
 package com.aravindh.spendsmart.ui.screens.daily
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
