@@ -19,7 +19,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.aravindh.spendsmart.ui.screens.analyticsscreen.AnalyticsScreen
-import com.aravindh.spendsmart.ui.screens.calendar.DatePickerEnhancedExample
+import com.aravindh.spendsmart.ui.screens.calendar.CalendarViewModel
+import com.aravindh.spendsmart.ui.screens.calendar.CalendarScreen
 import com.aravindh.spendsmart.ui.screens.daily.DailyScreen
 import com.aravindh.spendsmart.ui.screens.daily.DailyViewModel
 import com.aravindh.spendsmart.ui.screens.montlyscreen.MonthlyScreen
@@ -33,6 +34,7 @@ fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntSta
     val transactionViewModel: TransactionViewModel = viewModel()
     val dailyViewModel: DailyViewModel = viewModel()
     val monthlyViewModel: MonthlyViewModel = viewModel()
+    val calendarViewModel: CalendarViewModel = viewModel()
     Box(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.background)) {
@@ -69,7 +71,7 @@ fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntSta
                 MonthlyScreen(navController = navController, monthlyViewModel)
             }
             composable(route = BottomBarScreen.Calendar.route) {
-                DatePickerEnhancedExample(navController = navController)
+                CalendarScreen(navController = navController, calendarViewModel)
             }
             composable(route = BottomBarScreen.Analytics.route) {
                 AnalyticsScreen(navController = navController)

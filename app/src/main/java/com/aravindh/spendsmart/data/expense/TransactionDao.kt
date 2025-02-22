@@ -36,4 +36,7 @@ interface TransactionDao {
 
     @Query("SELECT * FROM transactions WHERE (:yearMonth IS NOT NULL AND :yearMonth <> '' AND created_date LIKE :yearMonth || '%')")
     fun getDataByYearMonth(yearMonth: String): LiveData<List<Transaction>>
+
+    @Query("SELECT * FROM transactions WHERE created_date BETWEEN :fromDate AND :toDate")
+    fun getDataByDateRange(fromDate:LocalDate,toDate: LocalDate):LiveData<List<Transaction>>
 }

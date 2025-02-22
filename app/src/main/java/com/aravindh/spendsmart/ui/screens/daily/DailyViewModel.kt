@@ -13,7 +13,7 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 class DailyViewModel(application: Application) : AndroidViewModel(application) {
 
-    val transactionRepository = TransactionRepository.getInstance(application)
+    private val transactionRepository = TransactionRepository.getInstance(application)
     val allTransactions = transactionRepository.getTransactions()
     val todayExpense = transactionRepository.getTodayExpense(LocalDate.now(), TransactionType.EXPENSE)
     val todayIncome = transactionRepository.getTodayIncome(LocalDate.now(), TransactionType.INCOME)
