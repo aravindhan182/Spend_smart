@@ -48,6 +48,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aravindh.spendsmart.R
@@ -57,6 +58,8 @@ import com.aravindh.spendsmart.data.expense.Transaction
 import com.aravindh.spendsmart.ui.screens.daily.IncomeOrExpenseRecyclerViewCard
 import com.aravindh.spendsmart.ui.screens.daily.NorRecordFoundCardView
 import com.aravindh.spendsmart.ui.screens.model.TransactionMutableView
+import com.aravindh.spendsmart.ui.theme.red300
+import com.aravindh.spendsmart.ui.theme.red600
 import com.aravindh.spendsmart.ui.theme.red900
 import com.aravindh.spendsmart.ui.theme.white
 import java.time.LocalDate
@@ -71,9 +74,9 @@ fun CalendarScreen(navController: NavController, viewModel: CalendarViewModel) {
     var openFromCalendar by remember { mutableStateOf(false) }
     var openToCalendar by remember { mutableStateOf(false) }
     var dataFetched by remember { mutableStateOf(false) }
-val dateRange by viewModel.dateRange.observeAsState(
-    MutableDateRange()
-)
+    val dateRange by viewModel.dateRange.observeAsState(
+        MutableDateRange()
+    )
     var allTransaction by remember { mutableStateOf<List<Transaction>?>(emptyList()) }
     val formatter = DateTimeFormatter.ISO_LOCAL_DATE
     val localFromDate: LocalDate? = dateRange.fromDate?.let {
@@ -84,7 +87,7 @@ val dateRange by viewModel.dateRange.observeAsState(
     }
     LaunchedEffect(dataFetched, localFromDate) {
         if (dataFetched && localFromDate != null) {
-            viewModel.getDataByDateRange(localFromDate, localToDate?:LocalDate.now())
+            viewModel.getDataByDateRange(localFromDate, localToDate ?: LocalDate.now())
                 .observeForever { transactions ->
                     allTransaction = transactions
                 }
@@ -183,13 +186,14 @@ val dateRange by viewModel.dateRange.observeAsState(
                         .align(Alignment.End)
                         .padding(end = 16.dp, top = 8.dp, bottom = 8.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colorScheme.primary,
+                        backgroundColor = Color.Red,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text(
                         text = "GET",
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = white,
+                        fontWeight = FontWeight.SemiBold
                     )
 
                 }
