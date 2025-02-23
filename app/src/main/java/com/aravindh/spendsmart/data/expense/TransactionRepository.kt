@@ -63,7 +63,22 @@ class TransactionRepository(private val dao: TransactionDao) {
         return dao.getDataByYearMonth(yearMonth)
     }
 
-    fun getDataByDateRange(fromDate: LocalDate, toDate: LocalDate): LiveData<List<Transaction>>{
+    fun getDataByDateRange(fromDate: LocalDate, toDate: LocalDate): LiveData<List<Transaction>> {
         return dao.getDataByDateRange(fromDate, toDate)
+    }
+
+    fun getTodayExpenseTransaction(
+        today: LocalDate,
+        tType: TransactionType
+    ): LiveData<List<Transaction>> {
+        return dao.getTodayExpenseTransaction(today, tType)
+    }
+
+    fun getExpensesByDateRange(
+        transactionType: TransactionType,
+        fromDate: LocalDate,
+        toDate: LocalDate
+    ): LiveData<List<Transaction>> {
+        return dao.getExpenseByDateRange(transactionType, fromDate, toDate)
     }
 }

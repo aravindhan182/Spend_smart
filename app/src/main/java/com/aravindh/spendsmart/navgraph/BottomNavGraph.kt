@@ -18,6 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.aravindh.spendsmart.ui.screens.analyticsscreen.AnalyticViewModel
 import com.aravindh.spendsmart.ui.screens.analyticsscreen.AnalyticsScreen
 import com.aravindh.spendsmart.ui.screens.calendar.CalendarViewModel
 import com.aravindh.spendsmart.ui.screens.calendar.CalendarScreen
@@ -35,6 +36,7 @@ fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntSta
     val dailyViewModel: DailyViewModel = viewModel()
     val monthlyViewModel: MonthlyViewModel = viewModel()
     val calendarViewModel: CalendarViewModel = viewModel()
+    val analyticViewModel: AnalyticViewModel = viewModel()
     Box(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.background)) {
@@ -74,7 +76,7 @@ fun BottomNavGraph(navController: NavHostController, currentIndex: MutableIntSta
                 CalendarScreen(navController = navController, calendarViewModel)
             }
             composable(route = BottomBarScreen.Analytics.route) {
-                AnalyticsScreen(navController = navController)
+                AnalyticsScreen(navController = navController,analyticViewModel)
             }
             composable(route = "fabRoute?transactionID={transactionID}") { backStackEntry ->
                 val transactionID = backStackEntry.arguments?.getString("transactionID") ?: ""

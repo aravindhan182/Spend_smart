@@ -38,5 +38,18 @@ interface TransactionDao {
     fun getDataByYearMonth(yearMonth: String): LiveData<List<Transaction>>
 
     @Query("SELECT * FROM transactions WHERE created_date BETWEEN :fromDate AND :toDate")
-    fun getDataByDateRange(fromDate:LocalDate,toDate: LocalDate):LiveData<List<Transaction>>
+    fun getDataByDateRange(fromDate: LocalDate, toDate: LocalDate): LiveData<List<Transaction>>
+
+    @Query("SELECT * FROM transactions where created_date = :today and transaction_type = :tType")
+    fun getTodayExpenseTransaction(
+        today: LocalDate,
+        tType: TransactionType
+    ): LiveData<List<Transaction>>
+
+    @Query("SELECT * FROM transactions WHERE transaction_type = :transactionType AND created_date BETWEEN :fromDate AND :toDate")
+    fun getExpenseByDateRange(
+        transactionType: TransactionType = TransactionType.EXPENSE,
+        fromDate: LocalDate,
+        toDate: LocalDate
+    ): LiveData<List<Transaction>>
 }
