@@ -140,4 +140,8 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             }
         }
     }
+    fun resetSavedState() {
+        _saved.value = false
+        _transactionDataError.value = TransactionMutableErrorView()
+    }
 }

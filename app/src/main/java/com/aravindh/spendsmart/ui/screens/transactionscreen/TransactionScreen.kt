@@ -109,6 +109,7 @@ fun TransactionScreen(
     LaunchedEffect(successfullySaved) {
         if (successfullySaved) {
             navController.popBackStack()
+            viewModel.resetSavedState()
         }
     }
     if (!transactionID.isNullOrEmpty()) {
